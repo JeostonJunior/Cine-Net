@@ -396,4 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/Cine-Net.Infra/Context/DataBase.cs
+
