@@ -5,6 +5,7 @@
     <RootNamespace>Cine_Net.Domain</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+	<UserSecretsId>aca8398d-8075-40d0-8eff-d99ce6e2fcc2</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

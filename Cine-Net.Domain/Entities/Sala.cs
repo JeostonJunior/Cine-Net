@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Cine_Net.Domain.Entities
 {
@@ -19,18 +17,5 @@ namespace Cine_Net.Domain.Entities
         public Collection<Equipamentos> Equipamentos { get; set; }
         public double PrecoIngresso { get; set; }
         public List<Sessao> Sessao { get; set; }
-    }
-
-    public class Equipamentos
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        public string Itens { get; set; }
-
-        public int SalaId { get; set; }
-
-        public Sala Salas { get; set; }
     }
 }

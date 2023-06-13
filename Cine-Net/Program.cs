@@ -1,4 +1,9 @@
-﻿using Cine_Net.Infra.Context;
+﻿using Cine_Net.Domain.Entities;
+using Cine_Net.Infra.Context;
+using Cine_Net.Infra.Interfaces;
+using Cine_Net.Infra.Repositories;
+using Cine_Net.Services.Facades;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,27 +14,50 @@ class Program
         var serviceCollection = new ServiceCollection();
 
         IConfiguration configuration;
-        //ajuste para o seu diretorio raiz, Directory.GetCurrentDirectory() talvez resolva no seu caso
-        string appSettingsPath = Path.Combine(@"C:\Users\Jack\Desktop\Java\Cine-Net\Cine-Net\", "appsettings.json");
 
-        configuration = new ConfigurationBuilder()
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+
+        configuration = configurationBuilder
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile(appSettingsPath)
+            .AddJsonFile(GetAppSettingsPath())
+            .AddUserSecrets<Program>()
             .Build();
 
         serviceCollection.AddSingleton<IConfiguration>(configuration);
 
-        //build da coleção de lifeTime da aplicação, aqui se pah ja tem um pattern
+        var connectionString = configuration["Settings:ConnectionString:Cine-Net"];
+        serviceCollection.AddDbContext<DataBase>(options =>
+            options.UseSqlServer(connectionString)
+                .EnableSensitiveDataLogging(),
+            ServiceLifetime.Transient);
+
+        serviceCollection.AddScoped<DataBase>();
+        serviceCollection.AddScoped<IRepository<Cinema>, Repository<Cinema>>();
+        serviceCollection.AddScoped<IRepository<Sala>, Repository<Sala>>();
+        serviceCollection.AddScoped<IRepository<Filme>, Repository<Filme>>();
+        serviceCollection.AddScoped<IRepository<Sessao>, Repository<Sessao>>();
+        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+        serviceCollection.AddScoped<GerenciamentoCinemaFacade>();
+
         var serviceProvider = serviceCollection.BuildServiceProvider();
+        var dbContext = serviceProvider.GetRequiredService<DataBase>();
 
-        serviceProvider.GetService<IConfiguration>();
+        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>() as UnitOfWork;
+        unitOfWork.SetContext(dbContext);
 
-        //aqui eu pego a string de conexão dentro do arquivo appsettings
-        //usei o user-secrets do C# para guardar a string de conexão
-        var connectionString = configuration.GetSection("Settings:ConnectionString")["Cine-Net"];
+        var cinemaFacade = serviceProvider.GetService<GerenciamentoCinemaFacade>();
 
+        cinemaFacade.CadastrarCinema("Cinema ABC", "Endereço ABC");
 
-        // instancia do dataBase, é aqui que iniciamos o BD
-        var dataBase = new DataBase(connectionString);
+        // Resto do código...
+    }
+
+    private static string GetAppSettingsPath()
+    {
+        var config = new ConfigurationBuilder()
+            .AddUserSecrets<Program>()
+            .Build();
+
+        return config["AppSettingsPath"];
     }
 }

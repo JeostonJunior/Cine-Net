@@ -1,12 +1,10 @@
-﻿using Cine_Net.Domain.Entities;
-
-namespace Cine_Net.Infra.Interfaces
+﻿namespace Cine_Net.Infra.Interfaces
 {
-    public interface IRepository<T> where T : Base
+    public interface IRepository<T>
     {
-        void Create(T obj);
+        T Create(T obj);
 
-        void Update(T obj);
+        T Update(T obj);
 
         void Remove(long id);
 

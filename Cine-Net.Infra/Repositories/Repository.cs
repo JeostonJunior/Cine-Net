@@ -1,10 +1,10 @@
-﻿using Cine_Net.Domain.Entities;
-using Cine_Net.Infra.Context;
+﻿using Cine_Net.Infra.Context;
 using Cine_Net.Infra.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cine_Net.Infra.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : Base
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly DataBase _dataBase;
 
@@ -13,29 +13,43 @@ namespace Cine_Net.Infra.Repositories
             _dataBase = database;
         }
 
-        public void Create(T obj)
+        public T Create(T obj)
         {
-            throw new NotImplementedException();
+            _dataBase.Add(obj);
+            _dataBase.SaveChanges();
+
+            return obj;
         }
 
-        public T Get(long id)
+        public T Update(T obj)
         {
-            throw new NotImplementedException();
-        }
+            _dataBase.Entry(obj).State = EntityState.Modified;
+            _dataBase.SaveChanges();
 
-        public IList<T> Get()
-        {
-            throw new NotImplementedException();
+            return obj;
         }
 
         public void Remove(long id)
         {
-            throw new NotImplementedException();
+            var obj = Get(id);
+
+            if (obj != null)
+            {
+                _dataBase.Remove(obj);
+                _dataBase.SaveChangesAsync();
+            }
         }
 
-        public void Update(T obj)
+        public T Get(long id)
         {
-            throw new NotImplementedException();
+            return _dataBase.Set<T>()
+                 .Find(id);
+        }
+
+        public IList<T> Get()
+        {
+            return _dataBase.Set<T>()
+                 .ToList();
         }
     }
 }

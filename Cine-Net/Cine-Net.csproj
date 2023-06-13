@@ -6,7 +6,7 @@
     <RootNamespace>Cine_Net</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <UserSecretsId>77686d0a-f63c-4d1d-a19f-c127b8d4d5a2</UserSecretsId>
+	<UserSecretsId>aca8398d-8075-40d0-8eff-d99ce6e2fcc2</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,10 +14,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Cine-Net.Infra\Cine-Net.Infra.csproj" />
+    <ProjectReference Include="..\Cine-Net.Services\Cine-Net.Services.csproj" />
   </ItemGroup>
 
 </Project>

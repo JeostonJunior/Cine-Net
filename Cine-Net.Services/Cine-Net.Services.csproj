@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Cine_Net.Services</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+	<UserSecretsId>aca8398d-8075-40d0-8eff-d99ce6e2fcc2</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cine-Net.Infra\Cine-Net.Infra.csproj" />
+  </ItemGroup>
+
+</Project>
