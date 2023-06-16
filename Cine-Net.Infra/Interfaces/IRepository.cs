@@ -6,10 +6,10 @@
 
         T Update(T obj);
 
-        void Remove(long id);
+        void Remove(int id);
 
-        T Get(long id);
+        T GetById(int id);
 
-        IList<T> Get();
+        IList<T> GetList();
     }
 }

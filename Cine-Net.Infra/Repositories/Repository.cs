@@ -29,9 +29,9 @@ namespace Cine_Net.Infra.Repositories
             return obj;
         }
 
-        public void Remove(long id)
+        public void Remove(int id)
         {
-            var obj = Get(id);
+            var obj = GetById(id);
 
             if (obj != null)
             {
@@ -40,13 +40,13 @@ namespace Cine_Net.Infra.Repositories
             }
         }
 
-        public T Get(long id)
+        public T GetById(int id)
         {
             return _dataBase.Set<T>()
                  .Find(id);
         }
 
-        public IList<T> Get()
+        public IList<T> GetList()
         {
             return _dataBase.Set<T>()
                  .ToList();

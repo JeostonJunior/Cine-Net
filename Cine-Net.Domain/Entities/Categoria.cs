@@ -6,16 +6,19 @@ namespace Cine_Net.Domain.Entities
 {
     public class Categoria
     {
-        [Key]
-        [Column(Order = 2)]
+        public Categoria()
+        {
+            Filme = new Collection<Filme>();
+        }
+
+        [Key]        
         public int Id { get; set; }
 
         public string Categorias { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
+        [ForeignKey("Filme")]
         public int FilmeId { get; set; }
-
+        
         public Collection<Filme> Filme { get; set; }
     }
 }

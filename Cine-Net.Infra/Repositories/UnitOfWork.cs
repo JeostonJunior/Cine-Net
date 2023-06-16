@@ -7,26 +7,33 @@ namespace Cine_Net.Infra.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private DataBase _dataBase;
+        private readonly IRepository<Cinema> _cinemaRepository;
+        private readonly IRepository<Sala> _salaRepository;
+        private readonly IRepository<Filme> _filmeRepository;
+        private readonly IRepository<Sessao> _sessaoRepository;
 
-        public UnitOfWork(DataBase database)
+        public IRepository<Cinema> CinemaRepository => _cinemaRepository;
+        public IRepository<Sala> SalaRepository => _salaRepository;
+        public IRepository<Filme> FilmeRepository => _filmeRepository;
+        public IRepository<Sessao> SessaoRepository => _sessaoRepository;
+
+        public UnitOfWork(DataBase database,
+            IRepository<Cinema> cinemaRepository,
+            IRepository<Sala> salaRepository,
+            IRepository<Filme> filmeRepository,
+            IRepository<Sessao> sessaoRepository)
         {
             _dataBase = database;
-            CinemaRepository = new Repository<Cinema>(_dataBase);
-            SalaRepository = new Repository<Sala>(_dataBase);
-            FilmeRepository = new Repository<Filme>(_dataBase);
-            SessaoRepository = new Repository<Sessao>(_dataBase);
+            _cinemaRepository = cinemaRepository;
+            _salaRepository = salaRepository;
+            _filmeRepository = filmeRepository;
+            _sessaoRepository = sessaoRepository;
         }
 
         public void SetContext(DataBase dataBase)
         {
             _dataBase = dataBase;
         }
-
-        public IRepository<Cinema> CinemaRepository { get; }
-        public IRepository<Sala> SalaRepository { get; }
-        public IRepository<Filme> FilmeRepository { get; }
-
-        public IRepository<Sessao> SessaoRepository { get; }
 
         public void SaveChanges()
         {
@@ -36,6 +43,6 @@ namespace Cine_Net.Infra.Repositories
         public void Dispose()
         {
             _dataBase.Dispose();
-        }        
+        }
     }
 }

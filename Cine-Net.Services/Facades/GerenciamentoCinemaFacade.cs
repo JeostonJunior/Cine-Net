@@ -24,7 +24,7 @@ namespace Cine_Net.Services.Facades
             _uof.CinemaRepository.Create(cinema);
         }
 
-        public void CadastrarSala(int numero, int capacidade, bool is3D, Collection<Equipamentos> equipamentos, double precoIngresso)
+        public void CadastrarSala(int numero, int capacidade, bool is3D, Collection<Equipamentos> equipamentos, double precoIngresso, int cinemaId)
         {
             var sala = new Sala
             {
@@ -32,11 +32,14 @@ namespace Cine_Net.Services.Facades
                 Capacidade = capacidade,
                 Is3D = is3D,
                 Equipamentos = equipamentos,
-                PrecoIngresso = precoIngresso
+                PrecoIngresso = precoIngresso,
+                CinemaId = cinemaId
             };
 
             _uof.SalaRepository.Create(sala);
+            _uof.SaveChanges();
         }
+
 
         public void CadastrarFilme(string titulo, string diretor, string atorPrincipal, double duracao, string classificacao, Collection<Categoria> categoria)
         {
@@ -63,6 +66,13 @@ namespace Cine_Net.Services.Facades
             };
 
             _uof.SessaoRepository.Create(sessao);
+        }
+
+        public ICollection<Sala> ObterSalasDoCinema(int cinemaId)
+        {
+            var cinema = _uof.CinemaRepository.GetById(cinemaId);
+
+            return cinema.Salas;
         }
     }
 }

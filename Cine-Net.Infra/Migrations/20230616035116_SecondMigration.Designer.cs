@@ -4,6 +4,7 @@ using Cine_Net.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cine_Net.Infra.Migrations
 {
     [DbContext(typeof(DataBase))]
-    partial class DataBaseModelSnapshot : ModelSnapshot
+    [Migration("20230616035116_SecondMigration")]
+    partial class SecondMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +29,8 @@ namespace Cine_Net.Infra.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(2);
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -34,7 +38,8 @@ namespace Cine_Net.Infra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FilmeId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
@@ -53,11 +58,7 @@ namespace Cine_Net.Infra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SalaId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -73,17 +74,12 @@ namespace Cine_Net.Infra.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Cpf")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IngressoId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsEstudante")
                         .HasColumnType("bit");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -135,11 +131,7 @@ namespace Cine_Net.Infra.Migrations
                     b.Property<double>("Duracao")
                         .HasColumnType("float");
 
-                    b.Property<int>("SessaoId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Titulo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -155,10 +147,10 @@ namespace Cine_Net.Infra.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClienteId")
+                    b.Property<int?>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SessaoId")
+                    b.Property<int?>("SessaoId")
                         .HasColumnType("int");
 
                     b.Property<double>("Valor")
@@ -184,7 +176,7 @@ namespace Cine_Net.Infra.Migrations
                     b.Property<int>("Capacidade")
                         .HasColumnType("int");
 
-                    b.Property<int>("CinemaId")
+                    b.Property<int?>("CinemaId")
                         .HasColumnType("int");
 
                     b.Property<int>("EquipamentosId")
@@ -198,12 +190,6 @@ namespace Cine_Net.Infra.Migrations
 
                     b.Property<double>("PrecoIngresso")
                         .HasColumnType("float");
-
-                    b.Property<int?>("SalaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SessaoId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -220,16 +206,13 @@ namespace Cine_Net.Infra.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("FilmeId")
+                    b.Property<int?>("FilmeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Horario")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IngressoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SalaId")
+                    b.Property<int?>("SalaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -243,17 +226,15 @@ namespace Cine_Net.Infra.Migrations
 
             modelBuilder.Entity("FilmeCategoria", b =>
                 {
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("int");
-
                     b.Property<int>("FilmeId")
                         .HasColumnType("int");
 
-                    b.HasKey("CategoriaId", "FilmeId");
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FilmeId", "CategoriaId");
 
                     b.HasIndex("CategoriaId");
-
-                    b.HasIndex("FilmeId");
 
                     b.ToTable("FilmeCategoria");
                 });
@@ -272,16 +253,12 @@ namespace Cine_Net.Infra.Migrations
             modelBuilder.Entity("Cine_Net.Domain.Entities.Ingresso", b =>
                 {
                     b.HasOne("Cine_Net.Domain.Entities.Cliente", "Cliente")
-                        .WithMany("Ingresso")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ClienteId");
 
                     b.HasOne("Cine_Net.Domain.Entities.Sessao", "Sessao")
-                        .WithMany("Ingresso")
-                        .HasForeignKey("SessaoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("SessaoId");
 
                     b.Navigation("Cliente");
 
@@ -290,28 +267,20 @@ namespace Cine_Net.Infra.Migrations
 
             modelBuilder.Entity("Cine_Net.Domain.Entities.Sala", b =>
                 {
-                    b.HasOne("Cine_Net.Domain.Entities.Cinema", "Cinema")
+                    b.HasOne("Cine_Net.Domain.Entities.Cinema", null)
                         .WithMany("Salas")
-                        .HasForeignKey("CinemaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Cinema");
+                        .HasForeignKey("CinemaId");
                 });
 
             modelBuilder.Entity("Cine_Net.Domain.Entities.Sessao", b =>
                 {
                     b.HasOne("Cine_Net.Domain.Entities.Filme", "Filme")
-                        .WithMany("Sessao")
-                        .HasForeignKey("FilmeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("FilmeId");
 
                     b.HasOne("Cine_Net.Domain.Entities.Sala", "Sala")
                         .WithMany("Sessao")
-                        .HasForeignKey("SalaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("SalaId");
 
                     b.Navigation("Filme");
 
@@ -338,26 +307,11 @@ namespace Cine_Net.Infra.Migrations
                     b.Navigation("Salas");
                 });
 
-            modelBuilder.Entity("Cine_Net.Domain.Entities.Cliente", b =>
-                {
-                    b.Navigation("Ingresso");
-                });
-
-            modelBuilder.Entity("Cine_Net.Domain.Entities.Filme", b =>
-                {
-                    b.Navigation("Sessao");
-                });
-
             modelBuilder.Entity("Cine_Net.Domain.Entities.Sala", b =>
                 {
                     b.Navigation("Equipamentos");
 
                     b.Navigation("Sessao");
-                });
-
-            modelBuilder.Entity("Cine_Net.Domain.Entities.Sessao", b =>
-                {
-                    b.Navigation("Ingresso");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,6 +4,7 @@ using Cine_Net.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cine_Net.Infra.Migrations
 {
     [DbContext(typeof(DataBase))]
-    partial class DataBaseModelSnapshot : ModelSnapshot
+    [Migration("20230616051748_Rebase")]
+    partial class Rebase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,6 +25,19 @@ namespace Cine_Net.Infra.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CategoriaFilme", b =>
+                {
+                    b.Property<int>("FilmeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FilmeId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("FilmeId", "FilmeId1");
+
+                    b.ToTable("CategoriaFilme");
+                });
+
             modelBuilder.Entity("Cine_Net.Domain.Entities.Categoria", b =>
                 {
                     b.Property<int>("Id")
@@ -29,9 +45,6 @@ namespace Cine_Net.Infra.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Categorias")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FilmeId")
                         .HasColumnType("int");
@@ -198,9 +211,6 @@ namespace Cine_Net.Infra.Migrations
 
                     b.Property<double>("PrecoIngresso")
                         .HasColumnType("float");
-
-                    b.Property<int?>("SalaId")
-                        .HasColumnType("int");
 
                     b.Property<int>("SessaoId")
                         .HasColumnType("int");

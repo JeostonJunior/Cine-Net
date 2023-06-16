@@ -4,6 +4,7 @@ using Cine_Net.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cine_Net.Infra.Migrations
 {
     [DbContext(typeof(DataBase))]
-    partial class DataBaseModelSnapshot : ModelSnapshot
+    [Migration("20230616053956_Rebase2")]
+    partial class Rebase2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,9 +201,6 @@ namespace Cine_Net.Infra.Migrations
 
                     b.Property<double>("PrecoIngresso")
                         .HasColumnType("float");
-
-                    b.Property<int?>("SalaId")
-                        .HasColumnType("int");
 
                     b.Property<int>("SessaoId")
                         .HasColumnType("int");

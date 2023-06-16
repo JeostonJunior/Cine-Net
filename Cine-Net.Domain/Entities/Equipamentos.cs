@@ -11,8 +11,8 @@ namespace Cine_Net.Domain.Entities
 
         public string Itens { get; set; }
 
+        [ForeignKey("Sala")]
         public int SalaId { get; set; }
-
         public Sala Salas { get; set; }
     }
 }
