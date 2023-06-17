@@ -1,55 +1,39 @@
-﻿using Cine_Net.Infra.Context;
-using Cine_Net.Infra.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Cine_Net.Infra.Interfaces;
 
 namespace Cine_Net.Infra.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepositoryCache<T>
     {
-        private readonly DataBase _dataBase;
+        private readonly IRepositoryCache<T> _repository;
 
-        public Repository(DataBase database)
+        public Repository(IRepositoryCache<T> repository)
         {
-            _dataBase = database;
+            _repository = repository;
         }
 
-        public T Create(T obj)
+        public void Add(T obj)
         {
-            _dataBase.Add(obj);
-            _dataBase.SaveChanges();
-
-            return obj;
+            _repository.Add(obj);
         }
 
-        public T Update(T obj)
+        public void Delete(T obj)
         {
-            _dataBase.Entry(obj).State = EntityState.Modified;
-            _dataBase.SaveChanges();
-
-            return obj;
-        }
-
-        public void Remove(int id)
-        {
-            var obj = GetById(id);
-
-            if (obj != null)
-            {
-                _dataBase.Remove(obj);
-                _dataBase.SaveChangesAsync();
-            }
+            _repository.Delete(obj);
         }
 
         public T GetById(int id)
         {
-            return _dataBase.Set<T>()
-                 .Find(id);
+            return _repository.GetById(id);
         }
 
-        public IList<T> GetList()
+        public IEnumerable<T> GetList()
         {
-            return _dataBase.Set<T>()
-                 .ToList();
+            return _repository.GetList();
+        }
+
+        public void Update(T obj)
+        {
+            _repository.Update(obj);
         }
     }
 }

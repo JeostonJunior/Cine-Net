@@ -6,11 +6,11 @@ namespace Cine_Net.Services.Facades
 {
     public class GerenciamentoCinemaFacade
     {
-        private readonly IUnitOfWork _uof;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GerenciamentoCinemaFacade(IUnitOfWork uof)
+        public GerenciamentoCinemaFacade(IUnitOfWork unitOfWork)
         {
-            _uof = uof;
+            _unitOfWork = unitOfWork;
         }
 
         public void CadastrarCinema(string nome, string endereco)
@@ -21,10 +21,11 @@ namespace Cine_Net.Services.Facades
                 Endereco = endereco
             };
 
-            _uof.CinemaRepository.Create(cinema);
+            _unitOfWork.CinemaRepository.Add(cinema);
+            _unitOfWork.SaveChanges();
         }
 
-        public void CadastrarSala(int numero, int capacidade, bool is3D, Collection<Equipamentos> equipamentos, double precoIngresso, int cinemaId)
+        public void CadastrarSala(int numero, int capacidade, bool is3D, Collection<Equipamentos> equipamentos, double precoIngresso, Cinema cinema)
         {
             var sala = new Sala
             {
@@ -33,13 +34,12 @@ namespace Cine_Net.Services.Facades
                 Is3D = is3D,
                 Equipamentos = equipamentos,
                 PrecoIngresso = precoIngresso,
-                CinemaId = cinemaId
+                Cinema = cinema
             };
 
-            _uof.SalaRepository.Create(sala);
-            _uof.SaveChanges();
+            _unitOfWork.SalaRepository.Add(sala);
+            _unitOfWork.SaveChanges();
         }
-
 
         public void CadastrarFilme(string titulo, string diretor, string atorPrincipal, double duracao, string classificacao, Collection<Categoria> categoria)
         {
@@ -53,7 +53,8 @@ namespace Cine_Net.Services.Facades
                 Categoria = categoria
             };
 
-            _uof.FilmeRepository.Create(filme);
+            _unitOfWork.FilmeRepository.Add(filme);
+            _unitOfWork.SaveChanges();
         }
 
         public void CadastrarSessao(Filme filme, Sala sala, DateTime horario)
@@ -65,12 +66,13 @@ namespace Cine_Net.Services.Facades
                 Horario = horario
             };
 
-            _uof.SessaoRepository.Create(sessao);
+            _unitOfWork.SessaoRepository.Add(sessao);
+            _unitOfWork.SaveChanges();
         }
 
         public ICollection<Sala> ObterSalasDoCinema(int cinemaId)
         {
-            var cinema = _uof.CinemaRepository.GetById(cinemaId);
+            var cinema = _unitOfWork.CinemaRepository.GetById(cinemaId);
 
             return cinema.Salas;
         }
