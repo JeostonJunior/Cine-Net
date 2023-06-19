@@ -6,7 +6,7 @@ namespace Cine_Net.Domain.Entities
     {
         public Sala()
         {
-            Equipamentos = new Collection<Equipamentos>();
+            Equipamentos = new List<String>();
             Sessao = new Collection<Sessao>();
         }
 
@@ -18,7 +18,7 @@ namespace Cine_Net.Domain.Entities
 
         public bool Is3D { get; set; }
 
-        public Collection<Equipamentos> Equipamentos { get; set; }
+        public List<String> Equipamentos { get; set; }
 
         public double PrecoIngresso { get; set; }
 

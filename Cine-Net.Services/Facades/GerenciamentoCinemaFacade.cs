@@ -25,7 +25,20 @@ namespace Cine_Net.Services.Facades
             _unitOfWork.SaveChanges();
         }
 
-        public void CadastrarSala(int numero, int capacidade, bool is3D, Collection<Equipamentos> equipamentos, double precoIngresso, Cinema cinema)
+        public void consultarCinemas()
+        {
+            IEnumerable<Cinema> cinemasEnumerable = _unitOfWork.CinemaRepository.GetList();
+            foreach (Cinema cinema in cinemasEnumerable)
+            {
+                Console.WriteLine(cinema.Id);
+                Console.WriteLine(cinema.Nome);
+                Console.WriteLine(cinema.Endereco);
+            }
+        }
+
+        public void CadastrarSala(int numero, int capacidade, bool is3D, List<String> equipamentos, double precoIngresso, String nomeCinema)
+
+        // Cinema cinema = unityOfWork.Cinema.getByName(nomeCinema)
         {
             var sala = new Sala
             {
@@ -34,14 +47,14 @@ namespace Cine_Net.Services.Facades
                 Is3D = is3D,
                 Equipamentos = equipamentos,
                 PrecoIngresso = precoIngresso,
-                Cinema = cinema
+                //Cinema = cinema
             };
 
             _unitOfWork.SalaRepository.Add(sala);
             _unitOfWork.SaveChanges();
         }
 
-        public void CadastrarFilme(string titulo, string diretor, string atorPrincipal, double duracao, string classificacao, Collection<Categoria> categoria)
+        public void CadastrarFilme(string titulo, string diretor, string atorPrincipal, int duracao, string classificacao, string categoria)
         {
             var filme = new Filme
             {
@@ -57,6 +70,12 @@ namespace Cine_Net.Services.Facades
             _unitOfWork.SaveChanges();
         }
 
+        public void consultarFilmes()
+        {
+            // Pegar todas as sessões de um dia em um cinema
+            // Pegar os filmes diferentes e exibir
+        }
+
         public void CadastrarSessao(Filme filme, Sala sala, DateTime horario)
         {
             var sessao = new Sessao
@@ -68,6 +87,19 @@ namespace Cine_Net.Services.Facades
 
             _unitOfWork.SessaoRepository.Add(sessao);
             _unitOfWork.SaveChanges();
+        }
+
+
+        public void consultarSessoes()
+        {
+            IEnumerable<Sessao> sessoesEnumerable = _unitOfWork.SessaoRepository.GetList();
+
+            foreach (Sessao sessao in sessoesEnumerable)
+            {
+                Console.WriteLine(sessao.Horario);
+                Console.WriteLine(sessao.Filme.Titulo);
+                Console.WriteLine(sessao.Sala.Numero);
+            }
         }
 
         public ICollection<Sala> ObterSalasDoCinema(int cinemaId)

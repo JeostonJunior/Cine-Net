@@ -6,7 +6,6 @@ namespace Cine_Net.Domain.Entities
     {
         public Filme()
         {
-            Categoria = new Collection<Categoria>();
             Sessao = new Collection<Sessao>();
         }
 
@@ -14,11 +13,11 @@ namespace Cine_Net.Domain.Entities
         public string Titulo { get; set; }
         public string Diretor { get; set; }
         public string AtorPrincipal { get; set; }
-        public double Duracao { get; set; }
+        public int Duracao { get; set; }
         public string Classificacao { get; set; }
+        public string Categoria { get; set; }
 
         public Collection<Sessao> Sessao { get; set; }
 
-        public Collection<Categoria> Categoria { get; set; }
     }
 }
