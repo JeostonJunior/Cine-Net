@@ -11,6 +11,8 @@ namespace Cine_Net.Domain.Entities
 
         public int Id { get; set; }
 
+        public int Lugares { get; set; }
+
         public Filme Filme { get; set; }
 
         public Sala Sala { get; set; }

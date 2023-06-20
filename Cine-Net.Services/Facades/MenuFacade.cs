@@ -132,12 +132,44 @@ namespace Cine_Net.Services.Facades
             if (option == 1)
             {
                 Console.WriteLine("Opção 1 selecionada: Cadastrar sessão");
-                // Lógica para cadastrar uma sessão
+                _cineManager.ConsultarCinemas();
+
+                Console.WriteLine("Digite o numero do cinema que deseja a sessão");
+                int idCinema = int.Parse(Console.ReadLine());
+
+                _cineManager.ConsultarSalas(idCinema);
+
+                Console.WriteLine("Digite o código da sala em que você quer cadastrar a sessão");
+                int idSala = int.Parse(Console.ReadLine());
+
+
+                _cineManager.ConsultarFilmes();
+                Console.WriteLine("Digite o código do filme que você quer exibir na sessão");
+                int idFilme = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Digite a data e hora da sessão (no formato dd/mm/yyyy HH:mm:ss):");
+                string input = Console.ReadLine();
+
+                DateTime dateTime;
+                // Insere o datetime, mas não insere corretamente
+                if (DateTime.TryParse(input, out dateTime))
+                {
+                    Console.WriteLine("A data e hora inseridas são válidas.");
+                    Console.WriteLine("Data e Hora: " + dateTime.ToString());
+                }
+
+                _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+
             }
             else if (option == 2)
             {
                 Console.WriteLine("Opção 2 selecionada: Consultar sessão");
-                // Lógica para consultar uma sessão
+                _cineManager.ConsultarCinemas();
+
+                Console.WriteLine("Digite o numero do cinema que deseja ver as sessões");
+                int idCinema = int.Parse(Console.ReadLine());
+
+                _cineManager.ConsultarSessoes(idCinema);
             }
             else if (option == 3)
             {

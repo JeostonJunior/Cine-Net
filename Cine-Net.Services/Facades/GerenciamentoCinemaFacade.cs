@@ -77,7 +77,7 @@ namespace Cine_Net.Services.Facades
                 Cinema = cinema
             };
 
-            cinema.Salas.Add(sala);
+            cinema.Salas.Add(sala); // talvez n funcione, ou seja, tem que chamar o update do repository
             _unitOfWork.SalaRepository.Add(sala);
 
             Console.WriteLine("========================================================");
@@ -112,7 +112,7 @@ namespace Cine_Net.Services.Facades
             {
                 Console.WriteLine("\n");
                 Console.WriteLine("========================================================");
-                Console.WriteLine($"Sala: {sala.Numero} | Preço: {sala.PrecoIngresso} | Capacidade: {sala.Capacidade}");
+                Console.WriteLine($"Código: {sala.Id} | Sala: {sala.Numero}  | Preço: {sala.PrecoIngresso} | Capacidade: {sala.Capacidade}");
                 Console.WriteLine("========================================================");
                 Console.WriteLine("\n");
             }
@@ -159,7 +159,7 @@ namespace Cine_Net.Services.Facades
             foreach (Filme filme in filmesEnumerable)
             {
                 Console.WriteLine("========================================================");
-                Console.WriteLine("Numero: " + filme.Id.ToString());
+                Console.WriteLine("Código: " + filme.Id.ToString());
                 Console.WriteLine("Titulo: " + filme.Titulo);
                 Console.WriteLine("Diretor: " + filme.Diretor);
                 Console.WriteLine("AtorPrincipal: " + filme.AtorPrincipal);
@@ -173,30 +173,65 @@ namespace Cine_Net.Services.Facades
             return true;
         }
 
-        public void CadastrarSessao(Filme filme, Sala sala, DateTime horario)
+        public void CadastrarSessao(int idFilme, int idSala, DateTime horario)
         {
+
+            var filme = _unitOfWork.FilmeRepository.GetById(idFilme);
+            var sala = _unitOfWork.SalaRepository.GetById(idSala);
+
             var sessao = new Sessao
             {
                 Filme = filme,
+                Lugares = sala.Capacidade,
                 Sala = sala,
                 Horario = horario
             };
 
+            sala.Sessao.Add(sessao);  // talvez n funcione, ou seja, tem que chamar o update do repository
             _unitOfWork.SessaoRepository.Add(sessao);
             _unitOfWork.SaveChanges();
         }
 
 
-        public void ConsultarSessoes()
+        // Pega todas as seções de um cinema
+        public bool ConsultarSessoes(int idCinema)
         {
+            var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
             IEnumerable<Sessao> sessoesEnumerable = _unitOfWork.SessaoRepository.GetList();
+            Collection<Sala> salas = cinema.Salas;
 
-            foreach (Sessao sessao in sessoesEnumerable)
+            // to-do:lembrar de fazer o update em salas e cinema
+
+            foreach (Sala sala in salas)
             {
-                Console.WriteLine(sessao.Horario);
-                Console.WriteLine(sessao.Filme.Titulo);
-                Console.WriteLine(sessao.Sala.Numero);
+                Collection<Sessao> sessoes = sala.Sessao;
+
+                if (sessoes == null || !sessoes.Any())
+                {
+                    Console.WriteLine("========================================================");
+                    Console.WriteLine("Não existem sessoes disponíveis.");
+                    Console.WriteLine("========================================================");
+                    Console.WriteLine("\n");
+                    return false;
+                }
+
+                foreach (Sessao sessao in sessoes)
+                {
+                    Console.WriteLine("========================================================");
+                    Console.WriteLine("Código: " + sessao.Id);
+                    Console.WriteLine("Numero da sala: " + sessao.Sala.Numero);
+                    Console.WriteLine("Titulo: " + sessao.Filme.Titulo);
+                    Console.WriteLine("Horario: " + sessao.Horario);
+                    Console.WriteLine("Lugares: " + sessao.Lugares);
+                    if (sessao.Sala.Is3D) Console.WriteLine("Sessao 3D");
+                    Console.WriteLine("Preco Inteira: " + sessao.Sala.PrecoIngresso);
+                    Console.WriteLine("========================================================");
+                    Console.WriteLine("\n");
+                }
+
             }
+
+            return true;
         }
 
         public ICollection<Sala> ObterSalasDoCinema(int cinemaId)
