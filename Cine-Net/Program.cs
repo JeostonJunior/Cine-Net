@@ -1,77 +1,92 @@
 ﻿using Cine_Net.Domain.Entities;
-using Cine_Net.Infra.Context;
-using Cine_Net.Infra.Interfaces;
 using Cine_Net.Infra.Repositories;
 using Cine_Net.Services.Facades;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
 
-class Program
+internal class Program
 {
-    static void Main()
+    private static void Main()
     {
-        var serviceCollection = new ServiceCollection();
-        IConfiguration configuration;
+        int optionMain;
+        int optionMenu;
 
-        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+        var unitOfWork = new UnitOfWork();
 
-        configuration = configurationBuilder
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile(GetAppSettingsPath())
-            .AddUserSecrets<Program>()
-            .Build();
+        var menu = new MenuFacade(unitOfWork);
 
-        serviceCollection.AddSingleton<IConfiguration>(configuration);
+        Console.WriteLine("======================================");
+        Console.WriteLine("Bem vindo a rede de Cinemas Cine-Net!");
+        Console.WriteLine("======================================");
 
-        var connectionString = configuration.GetConnectionString("Cine-Net");
 
-        serviceCollection.AddDbContext<DataBase>(options =>
-            options.UseSqlServer(connectionString)
-                .EnableSensitiveDataLogging()
-        );
+        while (true)
+        {
+            menu.menuPrincipal();
+            optionMain = Convert.ToInt32(Console.ReadLine());
 
-        serviceCollection.AddScoped<IRepository<Cinema>, Repository<Cinema>>();
-        serviceCollection.AddScoped<IRepository<Sala>, Repository<Sala>>();
-        serviceCollection.AddScoped<IRepository<Filme>, Repository<Filme>>();
-        serviceCollection.AddScoped<IRepository<Sessao>, Repository<Sessao>>();
-        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
-        serviceCollection.AddScoped<GerenciamentoCinemaFacade>();
+            Console.Clear();
 
-        var serviceProvider = serviceCollection.BuildServiceProvider();
+            if (optionMain == 1)
+            {
+                menu.menuCRUD("Cinema");
+                Console.Write("Escolha uma opção : ");
+                optionMenu = Convert.ToInt32(Console.ReadLine());
+                menu.readOptionCinema(optionMenu);
+            }
+            else if (optionMain == 2)
+            {
+                menu.menuCRUD("Salas");
+                Console.Write("Escolha uma opção : ");
+                optionMenu = Convert.ToInt32(Console.ReadLine());
+                menu.readOptionSala(optionMenu);
+            }
+            else if (optionMain == 3)
+            {
 
-        var dbContextOptions = serviceProvider.GetRequiredService<DataBase>();        
+                menu.menuCRUD("Filmes");
+                Console.Write("Escolha uma opção : ");
+                optionMenu = Convert.ToInt32(Console.ReadLine());
+                menu.readOptionFilme(optionMenu);
 
-        var unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>() as UnitOfWork;
-        unitOfWork.SetContext(dbContextOptions);
+            }
+            else if (optionMain == 4)
+            {
+                menu.menuCRUD("Sessões");
+                Console.Write("Escolha uma opção : ");
 
-        
+                optionMenu = Convert.ToInt32(Console.ReadLine());
+                menu.readOptionSessao(optionMenu);
+            }
 
-        var cinemaFacade = serviceProvider.GetService<GerenciamentoCinemaFacade>();
+            else if (optionMain == 5)
+            {
 
-        //cinemaFacade.CadastrarCinema("Cinema ABC", "Endereço ABC");
+            }
 
-        // Cadastro de uma sala
-        var equipamentos = new Collection<Equipamentos>();
-        cinemaFacade.CadastrarSala(1, 100, false, equipamentos, 10.99, 1);
+            else if (optionMain == 6)
+            {
 
-        // Obter as salas do cinema
-        //var salasDoCinema = cinemaFacade.ObterSalasDoCinema(1);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Opção inválida");
+            }
 
-        //foreach (var sala in salasDoCinema)
-        //{
-        //    Console.WriteLine($"Sala: {sala.Numero}, Capacidade: {sala.Capacidade}");
-        //}
-        // Resto do código...
-    }
+        }
 
-    private static string GetAppSettingsPath()
-    {
-        var config = new ConfigurationBuilder()
-            .AddUserSecrets<Program>()
-            .Build();
 
-        return config["AppSettingsPath"];
+        /*
+        var cinemaRepository = unitOfWork.CinemaRepository;
+
+        // Example usage of the cache repositories
+
+        cinemaRepository.Add(new Cinema { Id = 1, Nome = "CinemaSSA", Endereco = "Endereço ABC" });
+        cinemaRepository.Add(new Cinema { Id = 2, Nome = "CinemaIguatemi", Endereco = "Endereço CBA" });
+        var cachedCinema = cinemaRepository.GetById(2);
+
+        // Print the retrieved data
+        Console.WriteLine("Cinema:");
+        Console.WriteLine($"Nome: {cachedCinema.Nome}, Endereço: {cachedCinema.Endereco}");
+*/
     }
 }

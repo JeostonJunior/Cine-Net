@@ -4,10 +4,10 @@ namespace Cine_Net.Infra.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Cinema> CinemaRepository { get; }
-        IRepository<Sala> SalaRepository { get; }
-        IRepository<Filme> FilmeRepository { get; }   
-        IRepository<Sessao> SessaoRepository { get; }
+        IRepositoryCache<Cinema> CinemaRepository { get; }
+        IRepositoryCache<Sala> SalaRepository { get; }
+        IRepositoryCache<Filme> FilmeRepository { get; }
+        IRepositoryCache<Sessao> SessaoRepository { get; }
 
         void SaveChanges();
     }
