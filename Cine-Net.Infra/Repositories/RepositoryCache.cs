@@ -21,6 +21,9 @@ namespace Cine_Net.Infra.Repositories
                 id++; // Increment the id by 1 until it is unique
             }
 
+            PropertyInfo idProperty = typeof(T).GetProperty("Id");
+            idProperty.SetValue(obj, id);
+
             _cache[id] = obj;
         }
 

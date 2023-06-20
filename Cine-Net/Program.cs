@@ -17,28 +17,33 @@ internal class Program
         Console.WriteLine("Bem vindo a rede de Cinemas Cine-Net!");
         Console.WriteLine("======================================");
 
+
         while (true)
         {
-
-
             menu.menuPrincipal();
             optionMain = Convert.ToInt32(Console.ReadLine());
+
+            Console.Clear();
 
             if (optionMain == 1)
             {
                 menu.menuCRUD("Cinema");
+                Console.Write("Escolha uma opção : ");
                 optionMenu = Convert.ToInt32(Console.ReadLine());
                 menu.readOptionCinema(optionMenu);
             }
             else if (optionMain == 2)
             {
                 menu.menuCRUD("Salas");
+                Console.Write("Escolha uma opção : ");
                 optionMenu = Convert.ToInt32(Console.ReadLine());
                 menu.readOptionSala(optionMenu);
             }
             else if (optionMain == 3)
             {
+
                 menu.menuCRUD("Filmes");
+                Console.Write("Escolha uma opção : ");
                 optionMenu = Convert.ToInt32(Console.ReadLine());
                 menu.readOptionFilme(optionMenu);
 
@@ -46,6 +51,8 @@ internal class Program
             else if (optionMain == 4)
             {
                 menu.menuCRUD("Sessões");
+                Console.Write("Escolha uma opção : ");
+
                 optionMenu = Convert.ToInt32(Console.ReadLine());
                 menu.readOptionSessao(optionMenu);
             }
@@ -61,9 +68,9 @@ internal class Program
             }
             else
             {
+                Console.Clear();
                 Console.WriteLine("Opção inválida");
             }
-
 
         }
 
