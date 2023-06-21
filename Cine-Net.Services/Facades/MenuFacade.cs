@@ -1,3 +1,4 @@
+using Cine_Net.Domain.Entities;
 using Cine_Net.Infra.Interfaces;
 using System.Globalization;
 
@@ -8,11 +9,13 @@ namespace Cine_Net.Services.Facades
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly GerenciamentoCinemaFacade _cineManager;
+        private readonly GerenciamentoVendasFacade _vendasManager;
 
         public MenuFacade(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _cineManager = new GerenciamentoCinemaFacade(_unitOfWork);
+            _vendasManager = new GerenciamentoVendasFacade(_unitOfWork);
         }
 
         public void MenuInit()
@@ -149,7 +152,15 @@ namespace Cine_Net.Services.Facades
                     _cineManager.ConsultarCinemas();
 
                     Console.WriteLine("Digite o número do cinema que deseja a sessão");
-                    int idCinema = int.Parse(Console.ReadLine());
+                    int idCinema;
+
+                    while(true) {
+                        if(int.TryParse(Console.ReadLine(), out idCinema)) {
+                            break;
+                        } else {
+                            Console.WriteLine("Opção inválida, informe novamente!");
+                        }
+                    }
 
                     _cineManager.ConsultarSalas(idCinema);
 
@@ -188,7 +199,15 @@ namespace Cine_Net.Services.Facades
                     _cineManager.ConsultarCinemas();
 
                     Console.WriteLine("Digite o número do cinema que deseja ver as sessões");
-                    int idCinemaConsultar = int.Parse(Console.ReadLine());
+                    int idCinemaConsultar;
+
+                    while(true) {
+                        if(int.TryParse(Console.ReadLine(), out idCinemaConsultar)) {
+                            break;
+                        } else {
+                            Console.WriteLine("Opção inválida, informe novamente!");
+                        }
+                    }
 
                     _cineManager.ConsultarSessoes(idCinemaConsultar);
                     break;
@@ -268,5 +287,86 @@ namespace Cine_Net.Services.Facades
                     break;
             }
         }
+
+        private double ReadDouble() {
+            double value;
+
+            while(true) {
+                if(double.TryParse(Console.ReadLine().Replace(",", "."), out value)) {
+                    break;
+                } else {
+                    Console.WriteLine("Valor inválido, informe novamente!");
+                }
+            }
+
+            return value;
+        }
+        public void ReadIngressoInfos() {
+            Console.WriteLine("Informe o nome do cliente: ");
+            var nome = Console.ReadLine();
+            
+            Console.WriteLine("Informe o CPF do cliente: ");
+            var cpf = Console.ReadLine();
+            
+            Console.WriteLine("Informe o valor do ingresso: ");
+            var valor = ReadDouble();
+
+            bool? isEstudante = null;
+            while(true) {
+                Console.WriteLine("O cliente é estudante? [s/n]: ");
+                var resp = Console.ReadLine();
+
+                if(resp.ToLower().Equals("s")) {
+                    isEstudante = true;
+                    valor /= 2;
+                    Console.WriteLine($"O valor do ingresso foi alterado: R${valor.ToString().Replace(".", ",")}");
+                }
+                else if (resp.ToLower().Equals("n")) {
+                    isEstudante = false;
+                }
+
+                if(isEstudante is null) {
+                    Console.WriteLine("Opção inválida, digite 's' ou 'n'");
+                } else {
+                    break;
+                }
+            }
+
+            var cliente = new Cliente
+            {
+                Nome = nome,
+                Cpf = cpf,
+                IsEstudante = (bool)isEstudante,
+            };
+
+            ReadOptionSessao(2);
+            Sessao sessao;
+
+            while(true) {
+                Console.WriteLine("Digite o número da sessão desejada: ");
+                int idSessao;
+
+                while(true) {
+                    if(int.TryParse(Console.ReadLine(), out idSessao)) {
+                        break;
+                    } else {
+                        Console.WriteLine("Opção inválida, informe novamente!");
+                    }
+                }
+
+                sessao = _unitOfWork.SessaoRepository.GetById(idSessao);
+
+                if(sessao.Lugares == 0) {
+                    Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
+                    sessao = null;
+                } else {
+                    break;
+                }
+            }
+
+            _vendasManager.VenderIngresso(cliente, sessao, valor);
+        }
+        
     }
+
 }

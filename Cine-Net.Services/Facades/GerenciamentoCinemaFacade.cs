@@ -189,7 +189,7 @@ namespace Cine_Net.Services.Facades
             sala.Sessao.Add(sessao);
             _unitOfWork.SalaRepository.Update(sala);
             _unitOfWork.SessaoRepository.Add(sessao);
-            _unitOfWork.SaveChanges();
+            // _unitOfWork.SaveChanges();
         }
 
         // Pega todas as seções de um cinema

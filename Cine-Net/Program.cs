@@ -5,7 +5,7 @@ internal class Program
 {
     private static void Main()
     {
-        int optionMain;
+        int? optionMain;
         int optionMenu;
 
         var unitOfWork = new UnitOfWork();
@@ -24,7 +24,11 @@ internal class Program
         while (true)
         {
             MenuFacade.MenuPrincipal();
-            optionMain = Convert.ToInt32(Console.ReadLine());
+            try {
+                optionMain = Convert.ToInt32(Console.ReadLine());
+            } catch {
+                optionMain = null;
+            }
 
             Console.Clear();
 
@@ -67,11 +71,11 @@ internal class Program
                     break;
 
                 case 5:
-                    // Lógica para a opção 5
+                    menu.ReadIngressoInfos();
                     break;
 
                 case 6:
-                    // Lógica para a opção 6
+                    // Lógica para Cancelar a venda de ingresso
                     break;
 
                 default:

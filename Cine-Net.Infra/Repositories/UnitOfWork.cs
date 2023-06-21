@@ -9,11 +9,15 @@ namespace Cine_Net.Infra.Repositories
         private readonly IRepositoryCache<Sala> _salaRepository;
         private readonly IRepositoryCache<Filme> _filmeRepository;
         private readonly IRepositoryCache<Sessao> _sessaoRepository;
+        private readonly IRepositoryCache<Ingresso> _ingressoRepository;
+        private readonly IRepositoryCache<Cliente> _clienteRepository;
 
         public IRepositoryCache<Cinema> CinemaRepository => _cinemaRepository;
         public IRepositoryCache<Sala> SalaRepository => _salaRepository;
         public IRepositoryCache<Filme> FilmeRepository => _filmeRepository;
         public IRepositoryCache<Sessao> SessaoRepository => _sessaoRepository;
+        public IRepositoryCache<Ingresso> IngressoRepository => _ingressoRepository;
+        public IRepositoryCache<Cliente> ClienteRepository => _clienteRepository;
 
         public UnitOfWork()
         {
@@ -21,18 +25,20 @@ namespace Cine_Net.Infra.Repositories
             _salaRepository = new RepositoryCache<Sala>();
             _filmeRepository = new RepositoryCache<Filme>();
             _sessaoRepository = new RepositoryCache<Sessao>();
+            _ingressoRepository = new RepositoryCache<Ingresso>();
+            _clienteRepository = new RepositoryCache<Cliente>();
         }
 
-        public void SaveChanges()
-        {
-            // Implementation to save changes in the cache repositories
-            // No action needed for the in-memory cache implementation
-        }
+        // public void SaveChanges()
+        // {
+        //     // Implementation to save changes in the cache repositories
+        //     // No action needed for the in-memory cache implementation
+        // }
 
-        public void Dispose()
-        {
-            // Implementation to dispose any resources if required
-            // No action needed for the in-memory cache implementation
-        }
+        // public void Dispose()
+        // {
+        //     // Implementation to dispose any resources if required
+        //     // No action needed for the in-memory cache implementation
+        // }
     }
 }
