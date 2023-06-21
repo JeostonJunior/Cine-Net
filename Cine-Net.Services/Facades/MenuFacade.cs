@@ -2,6 +2,7 @@ using Cine_Net.Domain.Entities;
 using Cine_Net.Infra.Interfaces;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace Cine_Net.Services.Facades
 {
@@ -14,6 +15,11 @@ namespace Cine_Net.Services.Facades
         {
             _unitOfWork = unitOfWork;
             _cineManager = new GerenciamentoCinemaFacade(_unitOfWork);
+        }
+
+        public void menuInit()
+        {
+            this._cineManager.initCinema();
         }
 
         public void menuPrincipal()
@@ -67,12 +73,12 @@ namespace Cine_Net.Services.Facades
             }
             else if (option == 3)
             {
-                // Lógica para atualizar cinema
+                // To-do : Lógica para atualizar cinema
 
             }
             else if (option == 4)
             {
-                // Lógica para excluir cinema
+                // To-do : Lógica para excluir cinema
             }
             else
             {
@@ -103,7 +109,6 @@ namespace Cine_Net.Services.Facades
             }
             else if (option == 2)
             {
-                // Lógica para consultar um filme
                 Console.WriteLine("Opção 2 selecionada: Consultar filme");
                 _cineManager.ConsultarFilmes();
 
@@ -111,12 +116,12 @@ namespace Cine_Net.Services.Facades
             else if (option == 3)
             {
                 Console.WriteLine("Opção 3 selecionada: Atualizar filme");
-                // Lógica para atualizar um filme
+                // To-do : Lógica para atualizar um filme
             }
             else if (option == 4)
             {
                 Console.WriteLine("Opção 4 selecionada: Excluir filme");
-                // Lógica para excluir um filme
+                // To-do : Lógica para excluir um filme
             }
             else
             {
@@ -151,9 +156,9 @@ namespace Cine_Net.Services.Facades
                 string input = Console.ReadLine();
 
                 DateTime dateTime;
-                // Insere o datetime, mas não insere corretamente
-                if (DateTime.TryParse(input, out dateTime))
+                if (DateTime.TryParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
                 {
+                    // To:do - Fazer a verificação de datas
                     Console.WriteLine("A data e hora inseridas são válidas.");
                     Console.WriteLine("Data e Hora: " + dateTime.ToString());
                 }
@@ -174,12 +179,12 @@ namespace Cine_Net.Services.Facades
             else if (option == 3)
             {
                 Console.WriteLine("Opção 3 selecionada: Atualizar sessão");
-                // Lógica para atualizar uma sessão
+                // To-do : Lógica para atualizar uma sessão
             }
             else if (option == 4)
             {
                 Console.WriteLine("Opção 4 selecionada: Excluir sessão");
-                // Lógica para excluir uma sessão
+                // To-do : Lógica para excluir uma sessão
             }
             else
             {
@@ -231,12 +236,12 @@ namespace Cine_Net.Services.Facades
             else if (option == 3)
             {
                 Console.WriteLine("Opção 3 selecionada: Atualizar sala");
-                // Lógica para atualizar uma sala
+                // To-do :Lógica para atualizar uma sala
             }
             else if (option == 4)
             {
                 Console.WriteLine("Opção 4 selecionada: Excluir sala");
-                // Lógica para excluir uma sala
+                // To-do : Lógica para excluir uma sala
             }
             else
             {
