@@ -17,7 +17,8 @@ internal class Program
         Console.WriteLine("======================================\n");
 
         // Fax os pré cadastros
-        menu.menuInit();
+        menu.MenuInit();
+
         Console.Clear();
 
         while (true)
