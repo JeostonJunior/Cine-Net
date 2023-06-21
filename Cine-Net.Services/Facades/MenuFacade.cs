@@ -309,7 +309,6 @@ namespace Cine_Net.Services.Facades
             var cpf = Console.ReadLine();
             
             Console.WriteLine("Informe o valor do ingresso: ");
-            var valor = ReadDouble();
 
             bool? isEstudante = null;
             while(true) {
@@ -318,8 +317,6 @@ namespace Cine_Net.Services.Facades
 
                 if(resp.ToLower().Equals("s")) {
                     isEstudante = true;
-                    valor /= 2;
-                    Console.WriteLine($"O valor do ingresso foi alterado: R${valor.ToString().Replace(".", ",")}");
                 }
                 else if (resp.ToLower().Equals("n")) {
                     isEstudante = false;
@@ -363,6 +360,9 @@ namespace Cine_Net.Services.Facades
                     break;
                 }
             }
+
+            var valor = sessao.Sala.PrecoIngresso;
+            if(cliente.IsEstudante) valor /= 2;
 
             _vendasManager.VenderIngresso(cliente, sessao, valor);
         }
