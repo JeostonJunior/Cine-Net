@@ -1,5 +1,4 @@
-﻿using Cine_Net.Domain.Entities;
-using Cine_Net.Infra.Repositories;
+﻿using Cine_Net.Infra.Repositories;
 using Cine_Net.Services.Facades;
 
 internal class Program
@@ -15,7 +14,7 @@ internal class Program
 
         Console.WriteLine("======================================");
         Console.WriteLine("Bem vindo a rede de Cinemas Cine-Net!");
-        Console.WriteLine("======================================");
+        Console.WriteLine("======================================\n");
 
         // Fax os pré cadastros
         menu.menuInit();
@@ -23,73 +22,62 @@ internal class Program
 
         while (true)
         {
-            menu.menuPrincipal();
+            MenuFacade.MenuPrincipal();
             optionMain = Convert.ToInt32(Console.ReadLine());
 
             Console.Clear();
 
-            if (optionMain == 1)
+            switch (optionMain)
             {
-                menu.menuCRUD("Cinema");
-                Console.Write("Escolha uma opção : ");
-                optionMenu = Convert.ToInt32(Console.ReadLine());
-                menu.readOptionCinema(optionMenu);
+                case 1:
+                    MenuFacade.MenuCRUD("Cinema");
+
+                    Console.Write("Escolha uma opção: ");
+                    optionMenu = int.Parse(Console.ReadLine());
+
+                    menu.ReadOptionCinema(optionMenu);
+                    break;
+
+                case 2:
+                    MenuFacade.MenuCRUD("Salas");
+
+                    Console.Write("Escolha uma opção: ");
+                    optionMenu = int.Parse(Console.ReadLine());
+
+                    menu.ReadOptionSala(optionMenu);
+                    break;
+
+                case 3:
+                    MenuFacade.MenuCRUD("Filmes");
+
+                    Console.Write("Escolha uma opção: ");
+                    optionMenu = int.Parse(Console.ReadLine());
+
+                    menu.ReadOptionFilme(optionMenu);
+                    break;
+
+                case 4:
+                    MenuFacade.MenuCRUD("Sessões");
+
+                    Console.Write("Escolha uma opção: ");
+                    optionMenu = int.Parse(Console.ReadLine());
+
+                    menu.ReadOptionSessao(optionMenu);
+                    break;
+
+                case 5:
+                    // Lógica para a opção 5
+                    break;
+
+                case 6:
+                    // Lógica para a opção 6
+                    break;
+
+                default:
+                    Console.Clear();
+                    Console.WriteLine("Opção inválida");
+                    break;
             }
-            else if (optionMain == 2)
-            {
-                menu.menuCRUD("Salas");
-                Console.Write("Escolha uma opção : ");
-                optionMenu = Convert.ToInt32(Console.ReadLine());
-                menu.readOptionSala(optionMenu);
-            }
-            else if (optionMain == 3)
-            {
-
-                menu.menuCRUD("Filmes");
-                Console.Write("Escolha uma opção : ");
-                optionMenu = Convert.ToInt32(Console.ReadLine());
-                menu.readOptionFilme(optionMenu);
-
-            }
-            else if (optionMain == 4)
-            {
-                menu.menuCRUD("Sessões");
-                Console.Write("Escolha uma opção : ");
-
-                optionMenu = Convert.ToInt32(Console.ReadLine());
-                menu.readOptionSessao(optionMenu);
-            }
-
-            else if (optionMain == 5)
-            {
-
-            }
-
-            else if (optionMain == 6)
-            {
-
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("Opção inválida");
-            }
-
         }
-
-
-        /*
-        var cinemaRepository = unitOfWork.CinemaRepository;
-
-        // Example usage of the cache repositories
-
-        cinemaRepository.Add(new Cinema { Id = 1, Nome = "CinemaSSA", Endereco = "Endereço ABC" });
-        cinemaRepository.Add(new Cinema { Id = 2, Nome = "CinemaIguatemi", Endereco = "Endereço CBA" });
-        var cachedCinema = cinemaRepository.GetById(2);
-
-        // Print the retrieved data
-        Console.WriteLine("Cinema:");
-        Console.WriteLine($"Nome: {cachedCinema.Nome}, Endereço: {cachedCinema.Endereco}");
-*/
     }
 }

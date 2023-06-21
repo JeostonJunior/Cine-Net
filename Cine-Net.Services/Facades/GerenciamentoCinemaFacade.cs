@@ -25,39 +25,37 @@ namespace Cine_Net.Services.Facades
 
             Console.WriteLine("================================");
             Console.WriteLine("Cinema Cadastrado com Sucesso!");
-            Console.WriteLine("================================");
-            Console.WriteLine("\n");
+            Console.WriteLine("================================\n");
         }
 
         public void ConsultarCinemas()
         {
-            IEnumerable<Cinema> cinemasEnumerable = _unitOfWork.CinemaRepository.GetList();
+            var cinemasEnumerable = _unitOfWork.CinemaRepository.GetList();
+
             ListarCinemas(cinemasEnumerable);
         }
 
-        public bool ListarCinemas(IEnumerable<Cinema> cinemasEnumerable)
+        public static bool ListarCinemas(IEnumerable<Cinema> cinemasEnumerable)
         {
-            if (cinemasEnumerable == null || !cinemasEnumerable.Any())
+            if (cinemasEnumerable is null || !cinemasEnumerable.Any())
             {
                 Console.WriteLine("================================");
                 Console.WriteLine("Não existem cinemas disponíveis.");
-                Console.WriteLine("================================");
-                Console.WriteLine("\n");
-                return false;
+                Console.WriteLine("================================\n");
+
+                return default;
             }
 
-            foreach (Cinema cinema in cinemasEnumerable)
+            foreach (var cinema in cinemasEnumerable)
             {
                 Console.WriteLine("========================================================");
                 Console.WriteLine("Numero: " + cinema.Id.ToString());
                 Console.WriteLine("Nome: " + cinema.Nome);
                 Console.WriteLine("Endereço: " + cinema.Endereco);
-                Console.WriteLine("========================================================");
-                Console.WriteLine("\n");
+                Console.WriteLine("========================================================\n");
             }
 
             return true;
-
         }
 
         public void CadastrarSala(int numero, int capacidade, bool is3D, List<String> equipamentos, double precoIngresso, int idCinema)
@@ -65,7 +63,6 @@ namespace Cine_Net.Services.Facades
             var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
 
             // To-do: Vericar se  o id escolhido existe
-
 
             var sala = new Sala
             {
@@ -83,14 +80,12 @@ namespace Cine_Net.Services.Facades
 
             Console.WriteLine("========================================================");
             Console.WriteLine("Sala cadastrada com sucesso!");
-            Console.WriteLine("========================================================");
-            Console.WriteLine("\n");
-
+            Console.WriteLine("========================================================\n");
         }
 
         public void ConsultarSalas(int idCinema)
         {
-            Cinema cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
+            var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
 
             // To-do: Vericar se  o id escolhido existe
 
@@ -110,19 +105,18 @@ namespace Cine_Net.Services.Facades
             {
                 Console.WriteLine("========================================================");
                 Console.WriteLine("Não existem salas disponíveis.");
-                Console.WriteLine("========================================================");
-                Console.WriteLine("\n");
-                return false;
+                Console.WriteLine("========================================================\n");
+
+                return default;
             }
 
-            foreach (Sala sala in salas)
+            foreach (var sala in salas)
             {
-                Console.WriteLine("\n");
-                Console.WriteLine("========================================================");
+                Console.WriteLine("\n========================================================");
                 Console.WriteLine($"Código: {sala.Id} | Sala: {sala.Numero}  | Preço: {sala.PrecoIngresso} | Capacidade: {sala.Capacidade}");
-                Console.WriteLine("========================================================");
-                Console.WriteLine("\n");
+                Console.WriteLine("========================================================\n");
             }
+
             return true;
         }
 
@@ -142,28 +136,28 @@ namespace Cine_Net.Services.Facades
 
             Console.WriteLine("========================================================");
             Console.WriteLine("Filme Cadastrado com Sucesso!");
-            Console.WriteLine("========================================================");
-            Console.WriteLine("\n");
+            Console.WriteLine("========================================================\n");
         }
 
         public void ConsultarFilmes()
         {
-            IEnumerable<Filme> filmesEnumerable = _unitOfWork.FilmeRepository.GetList();
+            var filmesEnumerable = _unitOfWork.FilmeRepository.GetList();
+
             ListarFilmes(filmesEnumerable);
         }
 
-        public bool ListarFilmes(IEnumerable<Filme> filmesEnumerable)
+        public static bool ListarFilmes(IEnumerable<Filme> filmesEnumerable)
         {
-            if (filmesEnumerable == null || !filmesEnumerable.Any())
+            if (filmesEnumerable is null || !filmesEnumerable.Any())
             {
                 Console.WriteLine("================================");
                 Console.WriteLine("Não existem filmes disponíveis.");
-                Console.WriteLine("================================");
-                Console.WriteLine("\n");
-                return false;
+                Console.WriteLine("================================\n");
+
+                return default;
             }
 
-            foreach (Filme filme in filmesEnumerable)
+            foreach (var filme in filmesEnumerable)
             {
                 Console.WriteLine("========================================================");
                 Console.WriteLine("Código: " + filme.Id.ToString());
@@ -173,8 +167,7 @@ namespace Cine_Net.Services.Facades
                 Console.WriteLine("Duracao: " + filme.Duracao);
                 Console.WriteLine("Classificacao: " + filme.Classificacao);
                 Console.WriteLine("Categoria: " + filme.Categoria);
-                Console.WriteLine("========================================================");
-                Console.WriteLine("\n");
+                Console.WriteLine("========================================================\n");
             }
 
             return true;
@@ -182,8 +175,8 @@ namespace Cine_Net.Services.Facades
 
         public void CadastrarSessao(int idFilme, int idSala, DateTime horario)
         {
-
             var filme = _unitOfWork.FilmeRepository.GetById(idFilme);
+
             var sala = _unitOfWork.SalaRepository.GetById(idSala);
 
             var sessao = new Sessao
@@ -200,7 +193,6 @@ namespace Cine_Net.Services.Facades
             _unitOfWork.SaveChanges();
         }
 
-
         // Pega todas as seções de um cinema
         public void ConsultarSessoes(int idCinema)
         {
@@ -214,18 +206,18 @@ namespace Cine_Net.Services.Facades
         {
             foreach (Sala sala in salas)
             {
-                Collection<Sessao> sessoes = sala.Sessao;
+                var sessoes = sala.Sessao;
 
-                if (sessoes == null || !sessoes.Any())
+                if (sessoes is null || !sessoes.Any())
                 {
                     Console.WriteLine("========================================================");
                     Console.WriteLine("Não existem sessoes disponíveis.");
-                    Console.WriteLine("========================================================");
-                    Console.WriteLine("\n");
-                    return false;
+                    Console.WriteLine("========================================================\n");
+
+                    return default;
                 }
 
-                foreach (Sessao sessao in sessoes)
+                foreach (var sessao in sessoes)
                 {
                     Console.WriteLine("========================================================");
                     Console.WriteLine("Código: " + sessao.Id);
@@ -233,12 +225,15 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Titulo: " + sessao.Filme.Titulo);
                     Console.WriteLine("Horario: " + sessao.Horario);
                     Console.WriteLine("Lugares: " + sessao.Lugares);
-                    if (sessao.Sala.Is3D) Console.WriteLine("Sessao 3D");
-                    Console.WriteLine("Preco Inteira: " + sessao.Sala.PrecoIngresso);
-                    Console.WriteLine("========================================================");
-                    Console.WriteLine("\n");
-                }
 
+                    if (sessao.Sala.Is3D)
+                    {
+                        Console.WriteLine("Sessao 3D");
+                    }
+
+                    Console.WriteLine("Preco Inteira: " + sessao.Sala.PrecoIngresso);
+                    Console.WriteLine("========================================================\n");
+                }
             }
 
             return true;

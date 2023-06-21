@@ -1,6 +1,4 @@
-using Cine_Net.Domain.Entities;
 using Cine_Net.Infra.Interfaces;
-using System.Collections.ObjectModel;
 
 namespace Cine_Net.Services.Facades
 {
@@ -8,25 +6,21 @@ namespace Cine_Net.Services.Facades
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        GerenciamentoVendasFacade(IUnitOfWork unitOfWork)
+        private GerenciamentoVendasFacade(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         public void venderIngresso()
         {
-
         }
 
         public void cancelarIngresso()
         {
-
         }
 
         public void imprimirTicket()
         {
-
         }
-
     }
 }
