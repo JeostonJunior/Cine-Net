@@ -18,6 +18,5 @@ namespace Cine_Net.Domain.Entities
         public string Categoria { get; set; }
 
         public Collection<Sessao> Sessao { get; set; }
-
     }
 }

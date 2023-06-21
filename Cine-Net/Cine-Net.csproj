@@ -9,6 +9,10 @@
 	<UserSecretsId>aca8398d-8075-40d0-8eff-d99ce6e2fcc2</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\Cine-Net.Infra\Cine-Net.Infra.csproj" />

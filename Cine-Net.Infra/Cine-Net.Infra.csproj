@@ -6,14 +6,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <UserSecretsId>aca8398d-8075-40d0-8eff-d99ce6e2fcc2</UserSecretsId>
-  </PropertyGroup>  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Context\**" />
+    <EmbeddedResource Remove="Context\**" />
+    <None Remove="Context\**" />
+  </ItemGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\Cine-Net.Domain\Cine-Net.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
+    <Folder Include="Datas\" />
   </ItemGroup>
 
 </Project>
