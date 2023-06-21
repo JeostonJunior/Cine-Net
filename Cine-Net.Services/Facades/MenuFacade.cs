@@ -15,6 +15,11 @@ namespace Cine_Net.Services.Facades
             _cineManager = new GerenciamentoCinemaFacade(_unitOfWork);
         }
 
+        public void MenuInit()
+        {
+            _cineManager.InitCinema();
+        }
+
         public static void MenuPrincipal()
         {
             Console.WriteLine("=========================================================");
@@ -155,21 +160,27 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Digite o código do filme que você quer exibir na sessão");
                     int idFilme = int.Parse(Console.ReadLine());
 
-                    Console.WriteLine("Digite a data e hora da sessão (no formato dd/mm/yyyy HH:mm:ss):");
-                    string input = Console.ReadLine();
+                    bool dataHoraValida = false;
 
-                    DateTime dateTime;
-                    if (DateTime.TryParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
+                    while (!dataHoraValida)
                     {
-                        Console.WriteLine("A data e hora inseridas são válidas.");
-                        Console.WriteLine("Data e Hora: " + dateTime.ToString());
-                    }
-                    else
-                    {
-                        Console.WriteLine("Data e hora inválidas.");
-                    }
+                        Console.WriteLine("Digite a data e hora da sessão (no formato dd/MM/yyyy HH:mm:ss):");
+                        string input = Console.ReadLine();
 
-                    _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+                        if (DateTime.TryParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
+                        {
+                            Console.WriteLine("A data e hora inseridas são válidas.");
+                            Console.WriteLine($"Data e Hora: {dateTime}");
+
+                            _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+
+                            dataHoraValida = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Data e hora inseridas são inválidas. Tente novamente.");
+                        }
+                    }
                     break;
 
                 case 2:
@@ -226,7 +237,8 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Digite os equipamentos da sala (separados por vírgula): ");
 
                     string[] equipamentos = Console.ReadLine().Split(',');
-                    List<string> listaEquipamentos = new List<string>(equipamentos);
+
+                    var listaEquipamentos = new List<string>(equipamentos);
 
                     _cineManager.CadastrarSala(numero, capacidade, is3D, listaEquipamentos, precoIngresso, idCinema);
                     break;

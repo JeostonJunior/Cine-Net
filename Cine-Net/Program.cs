@@ -16,6 +16,11 @@ internal class Program
         Console.WriteLine("Bem vindo a rede de Cinemas Cine-Net!");
         Console.WriteLine("======================================\n");
 
+        // Fax os pré cadastros
+        menu.MenuInit();
+
+        Console.Clear();
+
         while (true)
         {
             MenuFacade.MenuPrincipal();
