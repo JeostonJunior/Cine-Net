@@ -301,7 +301,7 @@ namespace Cine_Net.Services.Facades
 
             return value;
         }
-        public void ReadIngressoInfos() {
+        public void ReadVendaIngressoInfos() {
             Console.WriteLine("Informe o nome do cliente: ");
             var nome = Console.ReadLine();
             
@@ -366,7 +366,22 @@ namespace Cine_Net.Services.Facades
 
             _vendasManager.VenderIngresso(cliente, sessao, valor);
         }
-        
-    }
 
+        public void ReadCancelIngressoInfos() {
+            _vendasManager.ListarIngressos();
+
+            Console.WriteLine("Digite o número do ingresso que deseja cancelar: ");
+
+            int ingresso_id;
+            while(true) {
+                if(int.TryParse(Console.ReadLine(), out ingresso_id)) {
+                    break;
+                } else {
+                    Console.WriteLine("Opção inválida, informe novamente!");
+                }
+            }
+
+            _vendasManager.CancelarIngresso(ingresso_id);
+        }
+    }
 }

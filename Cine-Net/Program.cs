@@ -71,11 +71,11 @@ internal class Program
                     break;
 
                 case 5:
-                    menu.ReadIngressoInfos();
+                    menu.ReadVendaIngressoInfos();
                     break;
 
                 case 6:
-                    // Lógica para Cancelar a venda de ingresso
+                    menu.ReadCancelIngressoInfos();
                     break;
 
                 default:
