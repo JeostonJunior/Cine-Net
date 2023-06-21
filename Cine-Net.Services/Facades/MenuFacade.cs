@@ -1,4 +1,5 @@
 using Cine_Net.Infra.Interfaces;
+using System.Globalization;
 
 namespace Cine_Net.Services.Facades
 {
@@ -138,59 +139,62 @@ namespace Cine_Net.Services.Facades
 
             switch (option)
             {
-                Console.WriteLine("Opção 1 selecionada: Cadastrar sessão");
-                _cineManager.ConsultarCinemas();
+                case 1:
+                    Console.WriteLine("Opção 1 selecionada: Cadastrar sessão");
+                    _cineManager.ConsultarCinemas();
 
-                Console.WriteLine("Digite o numero do cinema que deseja a sessão");
-                int idCinema = int.Parse(Console.ReadLine());
+                    Console.WriteLine("Digite o número do cinema que deseja a sessão");
+                    int idCinema = int.Parse(Console.ReadLine());
 
-                _cineManager.ConsultarSalas(idCinema);
+                    _cineManager.ConsultarSalas(idCinema);
 
-                Console.WriteLine("Digite o código da sala em que você quer cadastrar a sessão");
-                int idSala = int.Parse(Console.ReadLine());
+                    Console.WriteLine("Digite o código da sala em que você quer cadastrar a sessão");
+                    int idSala = int.Parse(Console.ReadLine());
 
+                    _cineManager.ConsultarFilmes();
+                    Console.WriteLine("Digite o código do filme que você quer exibir na sessão");
+                    int idFilme = int.Parse(Console.ReadLine());
 
-                _cineManager.ConsultarFilmes();
-                Console.WriteLine("Digite o código do filme que você quer exibir na sessão");
-                int idFilme = int.Parse(Console.ReadLine());
+                    Console.WriteLine("Digite a data e hora da sessão (no formato dd/mm/yyyy HH:mm:ss):");
+                    string input = Console.ReadLine();
 
-                Console.WriteLine("Digite a data e hora da sessão (no formato dd/mm/yyyy HH:mm:ss):");
-                string input = Console.ReadLine();
+                    DateTime dateTime;
+                    if (DateTime.TryParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
+                    {
+                        Console.WriteLine("A data e hora inseridas são válidas.");
+                        Console.WriteLine("Data e Hora: " + dateTime.ToString());
+                    }
+                    else
+                    {
+                        Console.WriteLine("Data e hora inválidas.");
+                    }
 
-                DateTime dateTime;
-                // Insere o datetime, mas não insere corretamente
-                if (DateTime.TryParse(input, out dateTime))
-                {
-                    Console.WriteLine("A data e hora inseridas são válidas.");
-                    Console.WriteLine("Data e Hora: " + dateTime.ToString());
-                }
+                    _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+                    break;
 
-                _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+                case 2:
+                    Console.WriteLine("Opção 2 selecionada: Consultar sessão");
+                    _cineManager.ConsultarCinemas();
 
-            }
-            else if (option == 2)
-            {
-                Console.WriteLine("Opção 2 selecionada: Consultar sessão");
-                _cineManager.ConsultarCinemas();
+                    Console.WriteLine("Digite o número do cinema que deseja ver as sessões");
+                    int idCinemaConsultar = int.Parse(Console.ReadLine());
 
-                Console.WriteLine("Digite o numero do cinema que deseja ver as sessões");
-                int idCinema = int.Parse(Console.ReadLine());
+                    _cineManager.ConsultarSessoes(idCinemaConsultar);
+                    break;
 
-                _cineManager.ConsultarSessoes(idCinema);
-            }
-            else if (option == 3)
-            {
-                Console.WriteLine("Opção 3 selecionada: Atualizar sessão");
-                // Lógica para atualizar uma sessão
-            }
-            else if (option == 4)
-            {
-                Console.WriteLine("Opção 4 selecionada: Excluir sessão");
-                // Lógica para excluir uma sessão
-            }
-            else
-            {
-                Console.WriteLine("Opção inválida");
+                case 3:
+                    Console.WriteLine("Opção 3 selecionada: Atualizar sessão");
+                    // Lógica para atualizar uma sessão
+                    break;
+
+                case 4:
+                    Console.WriteLine("Opção 4 selecionada: Excluir sessão");
+                    // Lógica para excluir uma sessão
+                    break;
+
+                default:
+                    Console.WriteLine("Opção inválida");
+                    break;
             }
         }
 

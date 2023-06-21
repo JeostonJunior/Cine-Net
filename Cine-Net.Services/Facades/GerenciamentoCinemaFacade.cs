@@ -46,7 +46,7 @@ namespace Cine_Net.Services.Facades
                 return default;
             }
 
-            foreach (Cinema cinema in cinemasEnumerable)
+            foreach (var cinema in cinemasEnumerable)
             {
                 Console.WriteLine("========================================================");
                 Console.WriteLine("Numero: " + cinema.Id.ToString());
@@ -105,11 +105,9 @@ namespace Cine_Net.Services.Facades
 
             foreach (var sala in salas)
             {
-                Console.WriteLine("\n");
-                Console.WriteLine("========================================================");
+                Console.WriteLine("\n========================================================");
                 Console.WriteLine($"Código: {sala.Id} | Sala: {sala.Numero}  | Preço: {sala.PrecoIngresso} | Capacidade: {sala.Capacidade}");
-                Console.WriteLine("========================================================");
-                Console.WriteLine("\n");
+                Console.WriteLine("========================================================\n");
             }
 
             return true;
@@ -170,8 +168,8 @@ namespace Cine_Net.Services.Facades
 
         public void CadastrarSessao(int idFilme, int idSala, DateTime horario)
         {
-
             var filme = _unitOfWork.FilmeRepository.GetById(idFilme);
+
             var sala = _unitOfWork.SalaRepository.GetById(idSala);
 
             var sessao = new Sessao
@@ -187,30 +185,29 @@ namespace Cine_Net.Services.Facades
             _unitOfWork.SaveChanges();
         }
 
-
         // Pega todas as seções de um cinema
         public bool ConsultarSessoes(int idCinema)
         {
             var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
-            IEnumerable<Sessao> sessoesEnumerable = _unitOfWork.SessaoRepository.GetList();
-            Collection<Sala> salas = cinema.Salas;
+
+            var salas = cinema.Salas;
 
             // to-do:lembrar de fazer o update em salas e cinema
 
-            foreach (Sala sala in salas)
+            foreach (var sala in salas)
             {
-                Collection<Sessao> sessoes = sala.Sessao;
+                var sessoes = sala.Sessao;
 
-                if (sessoes == null || !sessoes.Any())
+                if (sessoes is null || !sessoes.Any())
                 {
                     Console.WriteLine("========================================================");
                     Console.WriteLine("Não existem sessoes disponíveis.");
-                    Console.WriteLine("========================================================");
-                    Console.WriteLine("\n");
-                    return false;
+                    Console.WriteLine("========================================================\n");
+
+                    return default;
                 }
 
-                foreach (Sessao sessao in sessoes)
+                foreach (var sessao in sessoes)
                 {
                     Console.WriteLine("========================================================");
                     Console.WriteLine("Código: " + sessao.Id);
@@ -218,12 +215,15 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Titulo: " + sessao.Filme.Titulo);
                     Console.WriteLine("Horario: " + sessao.Horario);
                     Console.WriteLine("Lugares: " + sessao.Lugares);
-                    if (sessao.Sala.Is3D) Console.WriteLine("Sessao 3D");
-                    Console.WriteLine("Preco Inteira: " + sessao.Sala.PrecoIngresso);
-                    Console.WriteLine("========================================================");
-                    Console.WriteLine("\n");
-                }
 
+                    if (sessao.Sala.Is3D)
+                    {
+                        Console.WriteLine("Sessao 3D");
+                    }
+
+                    Console.WriteLine("Preco Inteira: " + sessao.Sala.PrecoIngresso);
+                    Console.WriteLine("========================================================\n");
+                }
             }
 
             return true;
