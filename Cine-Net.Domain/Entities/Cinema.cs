@@ -10,10 +10,15 @@ namespace Cine_Net.Domain.Entities
         }
 
         public int Id { get; set; }
+
         public string Nome { get; set; }
+
         public string Endereco { get; set; }
+
         public double PrecoWeek { get; set; }
+
         public double PrecoWeekend { get; set; }
+
         public Collection<Sala> Salas { get; set; }
     }
 }

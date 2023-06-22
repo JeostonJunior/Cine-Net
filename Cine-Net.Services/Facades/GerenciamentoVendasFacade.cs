@@ -12,7 +12,7 @@ namespace Cine_Net.Services.Facades
             _unitOfWork = unitOfWork;
         }
 
-        private void CadastrarCliente(Cliente cliente) 
+        private void CadastrarCliente(Cliente cliente)
         {
             _unitOfWork.ClienteRepository.Add(cliente);
 
@@ -21,7 +21,7 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine("========================================================\n");
         }
 
-        private void RegistrarIngresso(Ingresso ingresso) 
+        private void RegistrarIngresso(Ingresso ingresso)
         {
             ingresso.Sessao.Lugares -= 1;
             _unitOfWork.SessaoRepository.Update(ingresso.Sessao);
@@ -33,24 +33,36 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine("========================================================\n");
 
             bool? doImp = null;
-            while(true) {
-                Console.WriteLine("Deseja Imprimir seu ingresso? [s/n]: ");
+
+            while (true)
+            {
+                Console.Write("Deseja Imprimir seu ingresso? [s/n]: ");
+
                 var resp = Console.ReadLine();
 
-                if(resp.ToLower().Equals("s")) doImp = true;
-                else if (resp.ToLower().Equals("n")) doImp = false;
+                if (resp.ToLower().Equals("s"))
+                {
+                    ImprimirTicket(ingresso);
+                    break;
+                }
+                else if (resp.ToLower().Equals("n"))
+                {
+                    Console.WriteLine("Bom filme!");
+                    break;
+                }
 
-                if(doImp is null) Console.WriteLine("Opção inválida, digite 's' ou 'n'");
-                else break;
+                if (doImp is null)
+                {
+                    Console.WriteLine("Opção inválida, digite 's' ou 'n'");
+                }
+                break;
             }
-
-            if(doImp == true) ImprimirTicket(ingresso);
         }
 
         public void VenderIngresso(Cliente cliente, Sessao sessao, double valor)
         {
             CadastrarCliente(cliente);
-            
+
             var ingresso = new Ingresso
             {
                 Cliente = cliente,
@@ -64,7 +76,7 @@ namespace Cine_Net.Services.Facades
         public void CancelarIngresso(int ingresso_id)
         {
             var ingresso = _unitOfWork.IngressoRepository.GetById(ingresso_id);
-            
+
             ingresso.Sessao.Lugares += 1;
             _unitOfWork.SessaoRepository.Update(ingresso.Sessao);
 
@@ -75,7 +87,7 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine("========================================================\n");
         }
 
-        private void ImprimirTicket(Ingresso ingresso)
+        private static void ImprimirTicket(Ingresso ingresso)
         {
             Console.WriteLine("========================================================");
             Console.WriteLine($"Código: {ingresso.Id}");
@@ -89,12 +101,13 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine($"Filme: {ingresso.Sessao.Filme.Titulo}");
             Console.WriteLine($"========================================================\n");
         }
-        
+
         public void ListarIngressos()
         {
             var ingressos = _unitOfWork.IngressoRepository.GetList();
 
-            if(ingressos is null || !ingressos.Any()) {
+            if (ingressos is null || !ingressos.Any())
+            {
                 Console.WriteLine("================================");
                 Console.WriteLine("Não existem ingressos registrados.");
                 Console.WriteLine("================================\n");
@@ -102,7 +115,8 @@ namespace Cine_Net.Services.Facades
                 return;
             }
 
-            foreach (var ingresso in ingressos) {
+            foreach (var ingresso in ingressos)
+            {
                 Console.WriteLine("========================================================");
                 Console.WriteLine($"Código: {ingresso.Id}");
                 Console.WriteLine($"Valor: R$ {ingresso.Valor.ToString().Replace(".", ",")}");

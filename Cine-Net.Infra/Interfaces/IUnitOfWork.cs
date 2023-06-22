@@ -2,15 +2,13 @@
 
 namespace Cine_Net.Infra.Interfaces
 {
-    public interface IUnitOfWork /* : IDisposable */
+    public interface IUnitOfWork 
     {
         IRepositoryCache<Cinema> CinemaRepository { get; }
         IRepositoryCache<Sala> SalaRepository { get; }
         IRepositoryCache<Filme> FilmeRepository { get; }
         IRepositoryCache<Sessao> SessaoRepository { get; }
         IRepositoryCache<Ingresso> IngressoRepository { get; }
-        IRepositoryCache<Cliente> ClienteRepository { get; }
-
-        // void SaveChanges();
+        IRepositoryCache<Cliente> ClienteRepository { get; }     
     }
 }

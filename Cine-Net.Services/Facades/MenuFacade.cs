@@ -206,7 +206,6 @@ namespace Cine_Net.Services.Facades
                             {
                                 Console.WriteLine("Data e hora inseridas são inválidas. Tente novamente.");
                             }
-
                         }
                         else
                         {
@@ -328,6 +327,7 @@ namespace Cine_Net.Services.Facades
 
             return value;
         }
+
         public void ReadVendaIngressoInfos()
         {
             Console.WriteLine("Informe o nome do cliente: ");
@@ -392,10 +392,9 @@ namespace Cine_Net.Services.Facades
 
                 sessao = _unitOfWork.SessaoRepository.GetById(idSessao);
 
-                if (sessao.Lugares == 0)
+                if (sessao.Lugares.Equals(0))
                 {
                     Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
-                    sessao = null;
                 }
                 else
                 {
@@ -404,7 +403,11 @@ namespace Cine_Net.Services.Facades
             }
 
             var valor = sessao.PrecoIngresso;
-            if (cliente.IsEstudante) valor /= 2;
+
+            if (cliente.IsEstudante)
+            {
+                valor /= 2;
+            }
 
             _vendasManager.VenderIngresso(cliente, sessao, valor);
         }
@@ -431,7 +434,8 @@ namespace Cine_Net.Services.Facades
             _vendasManager.CancelarIngresso(ingresso_id);
         }
 
-        public void ConsultaFilmeDia() {
+        public void ConsultaFilmeDia()
+        {
 
             DateTime dataFilme;
 
@@ -452,12 +456,12 @@ namespace Cine_Net.Services.Facades
                 }
 
             }
+
             _cineManager.ConsultarFilmeDia(dataFilme);
-
-
         }
 
-         public void VerificarSessaoDisponivel() {
+        public void VerificarSessaoDisponivel()
+        {
 
             DateTime dataSessao;
 
@@ -478,9 +482,8 @@ namespace Cine_Net.Services.Facades
                 }
 
             }
+
             _cineManager.VerificarSessaoDisponivel(dataSessao);
-
-
         }
     }
 }

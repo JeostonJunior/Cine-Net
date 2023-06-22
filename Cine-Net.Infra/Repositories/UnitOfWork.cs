@@ -28,17 +28,5 @@ namespace Cine_Net.Infra.Repositories
             _ingressoRepository = new RepositoryCache<Ingresso>();
             _clienteRepository = new RepositoryCache<Cliente>();
         }
-
-        // public void SaveChanges()
-        // {
-        //     // Implementation to save changes in the cache repositories
-        //     // No action needed for the in-memory cache implementation
-        // }
-
-        // public void Dispose()
-        // {
-        //     // Implementation to dispose any resources if required
-        //     // No action needed for the in-memory cache implementation
-        // }
     }
 }

@@ -24,9 +24,12 @@ internal class Program
         while (true)
         {
             MenuFacade.MenuPrincipal();
-            try {
-                optionMain = Convert.ToInt32(Console.ReadLine());
-            } catch {
+            try
+            {
+                optionMain = int.Parse(Console.ReadLine());
+            }
+            catch
+            {
                 optionMain = null;
             }
 

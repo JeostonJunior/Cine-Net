@@ -21,7 +21,7 @@ namespace Cine_Net.Infra.Repositories
                 id++; // Increment the id by 1 until it is unique
             }
 
-            PropertyInfo idProperty = typeof(T).GetProperty("Id");
+            var idProperty = typeof(T).GetProperty("Id");
             idProperty.SetValue(obj, id);
 
             _cache[id] = obj;
@@ -30,6 +30,7 @@ namespace Cine_Net.Infra.Repositories
         public void Update(T obj)
         {
             int id = GetEntityId(obj);
+
             if (_cache.ContainsKey(id))
             {
                 _cache[id] = obj;
@@ -39,6 +40,7 @@ namespace Cine_Net.Infra.Repositories
         public void Delete(T obj)
         {
             int id = GetEntityId(obj);
+
             if (_cache.ContainsKey(id))
             {
                 _cache.Remove(id);
@@ -52,7 +54,7 @@ namespace Cine_Net.Infra.Repositories
                 return _cache[id];
             }
 
-            return default(T);
+            return default;
         }
 
         public IEnumerable<T> GetList()
@@ -60,17 +62,17 @@ namespace Cine_Net.Infra.Repositories
             return _cache.Values;
         }
 
-        private int GetEntityId(T obj)
+        private static int GetEntityId(T obj)
         {
-            PropertyInfo idProperty = typeof(T).GetProperty("Id");
+            var idProperty = typeof(T).GetProperty("Id");
+
             if (idProperty != null && idProperty.PropertyType == typeof(int))
             {
                 return (int)idProperty.GetValue(obj);
             }
             else
-            {
-                // Handle the case where the object doesn't have an integer Id property
-                throw new InvalidOperationException("The object does not have a valid integer Id property.");
+            {                
+                throw new InvalidOperationException("O Objeto não possui uma propriedade ID valida");
             }
         }
     }

@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Cine-Net.Domain\Cine-Net.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Datas\" />
-  </ItemGroup>
-
 </Project>
