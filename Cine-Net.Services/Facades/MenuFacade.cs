@@ -53,6 +53,8 @@ namespace Cine_Net.Services.Facades
         {
             string nome;
             string endereco;
+            double precoWeek;
+            double precoWeekend;
 
             Console.Clear();
 
@@ -66,9 +68,15 @@ namespace Cine_Net.Services.Facades
                     Console.Write("Digite o endereco do cinema: ");
                     endereco = Console.ReadLine();
 
+                    Console.Write("Digite um preco padrão para todas as sessões 2D nos dias de semana: ");
+                    precoWeek = double.Parse(Console.ReadLine());
+
+                    Console.Write("Digite um preco padrão para todas as sessões 2D nos finais de semana: ");
+                    precoWeekend = double.Parse(Console.ReadLine());
+
                     Console.Clear();
 
-                    _cineManager.CadastrarCinema(nome, endereco);
+                    _cineManager.CadastrarCinema(nome, endereco, precoWeek, precoWeekend);
                     break;
 
                 case 2:
@@ -121,7 +129,6 @@ namespace Cine_Net.Services.Facades
 
                 case 2:
                     Console.WriteLine("Opção 2 selecionada: Consultar filme");
-                    // Lógica para consultar um filme
                     _cineManager.ConsultarFilmes();
                     break;
 
@@ -154,10 +161,14 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Digite o número do cinema que deseja a sessão");
                     int idCinema;
 
-                    while(true) {
-                        if(int.TryParse(Console.ReadLine(), out idCinema)) {
+                    while (true)
+                    {
+                        if (int.TryParse(Console.ReadLine(), out idCinema))
+                        {
                             break;
-                        } else {
+                        }
+                        else
+                        {
                             Console.WriteLine("Opção inválida, informe novamente!");
                         }
                     }
@@ -180,12 +191,22 @@ namespace Cine_Net.Services.Facades
 
                         if (DateTime.TryParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
                         {
-                            Console.WriteLine("A data e hora inseridas são válidas.");
+
                             Console.WriteLine($"Data e Hora: {dateTime}");
 
-                            _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+                            DateTime dataAtual = DateTime.Now;
+                            if (dateTime > dataAtual)
+                            {
+                                dataHoraValida = true;
+                                Console.WriteLine("A data e hora inseridas são válidas.");
+                                _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+                            }
 
-                            dataHoraValida = true;
+                            else
+                            {
+                                Console.WriteLine("Data e hora inseridas são inválidas. Tente novamente.");
+                            }
+
                         }
                         else
                         {
@@ -201,10 +222,14 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Digite o número do cinema que deseja ver as sessões");
                     int idCinemaConsultar;
 
-                    while(true) {
-                        if(int.TryParse(Console.ReadLine(), out idCinemaConsultar)) {
+                    while (true)
+                    {
+                        if (int.TryParse(Console.ReadLine(), out idCinemaConsultar))
+                        {
                             break;
-                        } else {
+                        }
+                        else
+                        {
                             Console.WriteLine("Opção inválida, informe novamente!");
                         }
                     }
@@ -250,16 +275,13 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("A sala é 3D? (S/N): ");
                     bool is3D = Console.ReadLine().ToUpper() == "S";
 
-                    Console.WriteLine("Digite o preço do ingresso: ");
-                    double precoIngresso = double.Parse(Console.ReadLine());
-
                     Console.WriteLine("Digite os equipamentos da sala (separados por vírgula): ");
 
                     string[] equipamentos = Console.ReadLine().Split(',');
 
                     var listaEquipamentos = new List<string>(equipamentos);
 
-                    _cineManager.CadastrarSala(numero, capacidade, is3D, listaEquipamentos, precoIngresso, idCinema);
+                    _cineManager.CadastrarSala(numero, capacidade, is3D, listaEquipamentos, idCinema);
                     break;
 
                 case 2:
@@ -288,43 +310,55 @@ namespace Cine_Net.Services.Facades
             }
         }
 
-        private double ReadDouble() {
+        private double ReadDouble()
+        {
             double value;
 
-            while(true) {
-                if(double.TryParse(Console.ReadLine().Replace(",", "."), out value)) {
+            while (true)
+            {
+                if (double.TryParse(Console.ReadLine().Replace(",", "."), out value))
+                {
                     break;
-                } else {
+                }
+                else
+                {
                     Console.WriteLine("Valor inválido, informe novamente!");
                 }
             }
 
             return value;
         }
-        public void ReadVendaIngressoInfos() {
+        public void ReadVendaIngressoInfos()
+        {
             Console.WriteLine("Informe o nome do cliente: ");
             var nome = Console.ReadLine();
-            
+
             Console.WriteLine("Informe o CPF do cliente: ");
             var cpf = Console.ReadLine();
-            
+
             Console.WriteLine("Informe o valor do ingresso: ");
 
             bool? isEstudante = null;
-            while(true) {
+            while (true)
+            {
                 Console.WriteLine("O cliente é estudante? [s/n]: ");
                 var resp = Console.ReadLine();
 
-                if(resp.ToLower().Equals("s")) {
+                if (resp.ToLower().Equals("s"))
+                {
                     isEstudante = true;
                 }
-                else if (resp.ToLower().Equals("n")) {
+                else if (resp.ToLower().Equals("n"))
+                {
                     isEstudante = false;
                 }
 
-                if(isEstudante is null) {
+                if (isEstudante is null)
+                {
                     Console.WriteLine("Opção inválida, digite 's' ou 'n'");
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
@@ -339,44 +373,57 @@ namespace Cine_Net.Services.Facades
             ReadOptionSessao(2);
             Sessao sessao;
 
-            while(true) {
+            while (true)
+            {
                 Console.WriteLine("Digite o número da sessão desejada: ");
                 int idSessao;
 
-                while(true) {
-                    if(int.TryParse(Console.ReadLine(), out idSessao)) {
+                while (true)
+                {
+                    if (int.TryParse(Console.ReadLine(), out idSessao))
+                    {
                         break;
-                    } else {
+                    }
+                    else
+                    {
                         Console.WriteLine("Opção inválida, informe novamente!");
                     }
                 }
 
                 sessao = _unitOfWork.SessaoRepository.GetById(idSessao);
 
-                if(sessao.Lugares == 0) {
+                if (sessao.Lugares == 0)
+                {
                     Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
                     sessao = null;
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
 
-            var valor = sessao.Sala.PrecoIngresso;
-            if(cliente.IsEstudante) valor /= 2;
+            var valor = sessao.PrecoIngresso;
+            if (cliente.IsEstudante) valor /= 2;
 
             _vendasManager.VenderIngresso(cliente, sessao, valor);
         }
 
-        public void ReadCancelIngressoInfos() {
+        public void ReadCancelIngressoInfos()
+        {
             _vendasManager.ListarIngressos();
 
             Console.WriteLine("Digite o número do ingresso que deseja cancelar: ");
 
             int ingresso_id;
-            while(true) {
-                if(int.TryParse(Console.ReadLine(), out ingresso_id)) {
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out ingresso_id))
+                {
                     break;
-                } else {
+                }
+                else
+                {
                     Console.WriteLine("Opção inválida, informe novamente!");
                 }
             }

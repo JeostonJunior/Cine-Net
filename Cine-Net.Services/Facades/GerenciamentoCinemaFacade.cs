@@ -13,12 +13,14 @@ namespace Cine_Net.Services.Facades
             _unitOfWork = unitOfWork;
         }
 
-        public void CadastrarCinema(string nome, string endereco)
+        public void CadastrarCinema(string nome, string endereco, double precoWeek, double precoWeekend)
         {
             var cinema = new Cinema
             {
                 Nome = nome,
-                Endereco = endereco
+                Endereco = endereco,
+                PrecoWeek = precoWeek,
+                PrecoWeekend = precoWeekend
             };
 
             _unitOfWork.CinemaRepository.Add(cinema);
@@ -52,13 +54,15 @@ namespace Cine_Net.Services.Facades
                 Console.WriteLine("Numero: " + cinema.Id.ToString());
                 Console.WriteLine("Nome: " + cinema.Nome);
                 Console.WriteLine("Endereço: " + cinema.Endereco);
+                Console.WriteLine("Preco em dias de Semana: " + cinema.PrecoWeek);
+                Console.WriteLine("Preco em finais de Semana: " + cinema.PrecoWeekend);
                 Console.WriteLine("========================================================\n");
             }
 
             return true;
         }
 
-        public void CadastrarSala(int numero, int capacidade, bool is3D, List<string> equipamentos, double precoIngresso, int idCinema)
+        public void CadastrarSala(int numero, int capacidade, bool is3D, List<string> equipamentos, int idCinema)
         {
             var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
 
@@ -70,12 +74,11 @@ namespace Cine_Net.Services.Facades
                 Capacidade = capacidade,
                 Is3D = is3D,
                 Equipamentos = equipamentos,
-                PrecoIngresso = precoIngresso,
                 Cinema = cinema
             };
 
             cinema.Salas.Add(sala);
-            _unitOfWork.CinemaRepository.Update(cinema); // talvez n funcione, ou seja, tem que chamar o update do repository
+            _unitOfWork.CinemaRepository.Update(cinema);
             _unitOfWork.SalaRepository.Add(sala);
 
             Console.WriteLine("========================================================");
@@ -109,10 +112,12 @@ namespace Cine_Net.Services.Facades
                 return default;
             }
 
+
             foreach (var sala in salas)
             {
+                string is3D = sala.Is3D ? "Sala 3D" : "Sala 2D";
                 Console.WriteLine("\n========================================================");
-                Console.WriteLine($"Código: {sala.Id} | Sala: {sala.Numero}  | Preço: {sala.PrecoIngresso} | Capacidade: {sala.Capacidade}");
+                Console.WriteLine($"Código: {sala.Id} | Sala: {sala.Numero}  | Tipo: {sala.Is3D} | Capacidade: {sala.Capacidade}");
                 Console.WriteLine("========================================================\n");
             }
 
@@ -178,21 +183,21 @@ namespace Cine_Net.Services.Facades
 
             var sala = _unitOfWork.SalaRepository.GetById(idSala);
 
+
             var sessao = new Sessao
             {
                 Filme = filme,
                 Lugares = sala.Capacidade,
                 Sala = sala,
-                Horario = horario
+                Horario = horario,
+                PrecoIngresso = calcPrecoIngresso(sala, horario)
             };
 
             sala.Sessao.Add(sessao);
             _unitOfWork.SalaRepository.Update(sala);
             _unitOfWork.SessaoRepository.Add(sessao);
-            // _unitOfWork.SaveChanges();
         }
 
-        // Pega todas as seções de um cinema
         public void ConsultarSessoes(int idCinema)
         {
             var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
@@ -230,7 +235,7 @@ namespace Cine_Net.Services.Facades
                         Console.WriteLine("Sessao 3D");
                     }
 
-                    Console.WriteLine("Preco Inteira: " + sessao.Sala.PrecoIngresso);
+                    Console.WriteLine("Preco Inteira: " + sessao.PrecoIngresso);
                     Console.WriteLine("========================================================\n");
                 }
             }
@@ -238,24 +243,63 @@ namespace Cine_Net.Services.Facades
             return true;
         }
 
+        public bool isWeekend(DateTime data)
+        {
+            if (data.DayOfWeek == DayOfWeek.Saturday || data.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public double calcPrecoIngresso(Sala sala, DateTime data)
+        {
+            double precoWeek = sala.Cinema.PrecoWeek;
+            double precoWeekend = sala.Cinema.PrecoWeekend;
+
+            if (isWeekend(data) && sala.Is3D)
+            {
+                return (precoWeekend * 1.20);
+            }
+
+            else if (isWeekend(data) && (!sala.Is3D))
+            {
+                return (precoWeekend);
+            }
+
+            else if ((!isWeekend(data)) && sala.Is3D)
+            {
+                return (precoWeek * 1.20);
+            }
+
+            else
+            {
+                return (precoWeek);
+            }
+        }
+
+
         public void InitCinema()
         {
             // Add Cinemas
-            CadastrarCinema("CineSSA", "Rua Salvador"); // Id 0
-            CadastrarCinema("CineBA", "Rua Bahia"); // Id 1
-            CadastrarCinema("CineSP", "Rua São Paulo"); // Id 2
+            CadastrarCinema("CineSSA", "Rua Salvador", 30, 35); // Id 0
+            CadastrarCinema("CineBA", "Rua Bahia", 40, 50); // Id 1
+            CadastrarCinema("CineSP", "Rua São Paulo", 50, 75); // Id 2
 
             // Add Salas no Cinema SSA
-            CadastrarSala(1, 30, false, new List<string> { "Cadeira Especial" }, 30, 0); // Id 0
-            CadastrarSala(2, 30, false, new List<string> { "Cadeira Especial" }, 30, 0); // Id 1
+            CadastrarSala(1, 30, false, new List<string> { "Cadeira Especial" }, 0); // Id 0
+            CadastrarSala(2, 30, false, new List<string> { "Cadeira Especial" }, 0); // Id 1
 
             // Add Salas no Cinema BA
-            CadastrarSala(1, 30, true, new List<string> { "Oculos 3D", "Cadeira Especial" }, 30, 1);// Id 2
-            CadastrarSala(2, 30, false, new List<string> { "Cadeira Especial" }, 30, 1);  // Id 3
+            CadastrarSala(1, 30, true, new List<string> { "Oculos 3D", "Cadeira Especial" }, 1);// Id 2
+            CadastrarSala(2, 30, false, new List<string> { "Cadeira Especial" }, 1);  // Id 3
 
             // Add Salas no Cinema SP
-            CadastrarSala(1, 30, true, new List<string> { "Oculos", "Cadeira Especial" }, 30, 2); // Id 4
-            CadastrarSala(2, 30, true, new List<string> { "Oculos", "Cadeira Especial" }, 30, 2); // Id 5
+            CadastrarSala(1, 30, true, new List<string> { "Oculos", "Cadeira Especial" }, 2); // Id 4
+            CadastrarSala(2, 30, true, new List<string> { "Oculos", "Cadeira Especial" }, 2); // Id 5
 
             // Add Filmes
             CadastrarFilme("Matrix", "Lana Wachowski", "Keanu Reeves", 136, "+14", "Ficção Científica"); // Id 0

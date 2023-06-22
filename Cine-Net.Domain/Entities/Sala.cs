@@ -20,8 +20,6 @@ namespace Cine_Net.Domain.Entities
 
         public List<String> Equipamentos { get; set; }
 
-        public double PrecoIngresso { get; set; }
-
         public Collection<Sessao> Sessao { get; set; }
 
         public Cinema Cinema { get; set; }
