@@ -430,5 +430,57 @@ namespace Cine_Net.Services.Facades
 
             _vendasManager.CancelarIngresso(ingresso_id);
         }
+
+        public void ConsultaFilmeDia() {
+
+            DateTime dataFilme;
+
+            while (true)
+            {
+                Console.WriteLine("Informe o dia do filme (no formato dd/MM/yyyy):");
+                string input = Console.ReadLine();
+
+                if (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime data))
+                {
+                    dataFilme = data;
+                    Console.WriteLine($"Data: {dataFilme.Date}");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Data inserida é inválida. Tente novamente.");
+                }
+
+            }
+            _cineManager.ConsultarFilmeDia(dataFilme);
+
+
+        }
+
+         public void VerificarSessaoDisponivel() {
+
+            DateTime dataSessao;
+
+            while (true)
+            {
+                Console.WriteLine("Informe o dia das sessões(no formato dd/MM/yyyy):");
+                string input = Console.ReadLine();
+
+                if (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime data))
+                {
+                    dataSessao = data;
+                    Console.WriteLine($"Data: {dataSessao.Date}");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Data inserida é inválida. Tente novamente.");
+                }
+
+            }
+            _cineManager.VerificarSessaoDisponivel(dataSessao);
+
+
+        }
     }
 }

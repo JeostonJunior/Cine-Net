@@ -328,5 +328,60 @@ namespace Cine_Net.Services.Facades
             CadastrarSessao(6, 1, new DateTime(2023, 7, 12, 13, 45, 0));
             CadastrarSessao(2, 2, new DateTime(2023, 7, 13, 17, 30, 0));
         }
+
+        public void ConsultarFilmeDia(DateTime data){
+         
+            var sessoes = _unitOfWork.SessaoRepository.GetList();
+            var sessoesFiltradas = sessoes.Where((sessao)=> IsSameDay(sessao.Horario, data));
+
+            if (!sessoesFiltradas.Any()){
+                Console.WriteLine("Não foram encontrados filmes para este dia");
+            }
+
+            foreach(var sessao in sessoesFiltradas){
+                Console.WriteLine("========================================================");
+                Console.WriteLine("Código: " + sessao.Filme.Id.ToString());
+                Console.WriteLine("Titulo: " + sessao.Filme.Titulo);
+                Console.WriteLine("Diretor: " + sessao.Filme.Diretor);
+                Console.WriteLine("AtorPrincipal: " + sessao.Filme.AtorPrincipal);
+                Console.WriteLine("Duracao: " + sessao.Filme.Duracao);
+                Console.WriteLine("Classificacao: " + sessao.Filme.Classificacao);
+                Console.WriteLine("Categoria: " + sessao.Filme.Categoria);
+                Console.WriteLine("========================================================\n");
+            }
+    
+        }
+        private bool IsSameDay(DateTime data1, DateTime data2){
+            return data1.Date == data2.Date;
+        }
+
+        public void VerificarSessaoDisponivel(DateTime data){
+         
+            var sessoes = _unitOfWork.SessaoRepository.GetList();
+            var sessoesFiltradas = sessoes.Where((sessao)=> IsSameDay(sessao.Horario, data) && sessao.Lugares > 0);
+
+            if (!sessoesFiltradas.Any()){
+                Console.WriteLine("Não foram encontradas sessões disponíveis para este dia");
+            }
+
+            foreach(var sessao in sessoesFiltradas){
+                Console.WriteLine("========================================================");
+                    Console.WriteLine("Código: " + sessao.Id);
+                    Console.WriteLine("Numero da sala: " + sessao.Sala.Numero);
+                    Console.WriteLine("Titulo: " + sessao.Filme.Titulo);
+                    Console.WriteLine("Horario: " + sessao.Horario);
+                    Console.WriteLine("Lugares: " + sessao.Lugares);
+
+                    if (sessao.Sala.Is3D)
+                    {
+                        Console.WriteLine("Sessao 3D");
+                    }
+
+                    Console.WriteLine("Preco Inteira: " + sessao.PrecoIngresso);
+                    Console.WriteLine("========================================================\n");
+            }
+    
+        }
     }
+
 }
