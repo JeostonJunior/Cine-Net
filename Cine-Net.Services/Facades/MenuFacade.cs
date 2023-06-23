@@ -55,6 +55,7 @@ namespace Cine_Net.Services.Facades
             string endereco;
             double precoWeek;
             double precoWeekend;
+            int idCinema;
 
             Console.Clear();
 
@@ -68,27 +69,46 @@ namespace Cine_Net.Services.Facades
                     Console.Write("Digite o endereco do cinema: ");
                     endereco = Console.ReadLine();
 
-                    Console.Write("Digite um preco padrão para todas as sessões 2D nos dias de semana: ");
-                    precoWeek = double.Parse(Console.ReadLine());
+                    precoWeek = ReadDouble("Digite um preco padrão para todas as sessões 2D nos dias de semana: ");
 
-                    Console.Write("Digite um preco padrão para todas as sessões 2D nos finais de semana: ");
-                    precoWeekend = double.Parse(Console.ReadLine());
-
+                    precoWeekend = ReadDouble("Digite um preco padrão para todas as sessões 2D nos finais de semana: ");
                     Console.Clear();
 
                     _cineManager.CadastrarCinema(nome, endereco, precoWeek, precoWeekend);
                     break;
 
                 case 2:
+                    Console.WriteLine("Opção 2 selecionada: Consultar Cinema");
+                    Console.Clear();
                     _cineManager.ConsultarCinemas();
                     break;
 
                 case 3:
-                    // Lógica para atualizar cinema
+                    Console.WriteLine("Opção 3 selecionada: Atualizar Cinema");
+                    _cineManager.ConsultarCinemas();
+
+                    idCinema = ReadInt("Digite o número do cinema que deseja atualizar: ");
+
+                    Console.Write("Digite o novo nome do cinema: ");
+                    nome = Console.ReadLine();
+
+                    Console.Write("Digite o novo endereco do cinema: ");
+                    endereco = Console.ReadLine();
+
+                    precoWeek = ReadDouble("Digite um novo preco padrão para todas as sessões 2D nos dias de semana: ");
+
+                    precoWeekend = ReadDouble("Digite um novo preco padrão para todas as sessões 2D nos finais de semana: ");
+                    Console.Clear();
+
+                    _cineManager.AtualizarCinema(idCinema, nome, endereco, precoWeek, precoWeekend);
                     break;
 
                 case 4:
-                    // Lógica para excluir cinema
+                    _cineManager.ConsultarCinemas();
+                    idCinema = ReadInt("Digite o código do cinema que deseja excluir: ");
+                    Console.Clear();
+                    _cineManager.ExcluirCinema(idCinema);
+
                     break;
 
                 default:
@@ -99,6 +119,14 @@ namespace Cine_Net.Services.Facades
 
         public void ReadOptionFilme(int option)
         {
+            string titulo;
+            string diretor;
+            string atorPrincipal;
+            int duracao;
+            string classificacao;
+            string categoria;
+            int idFilme;
+
             Console.Clear();
 
             switch (option)
@@ -107,39 +135,65 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 1 selecionada: Cadastrar Filme");
 
                     Console.WriteLine("Digite o título do filme: ");
-                    string titulo = Console.ReadLine();
+                    titulo = Console.ReadLine();
 
                     Console.WriteLine("Digite o diretor do filme: ");
-                    string diretor = Console.ReadLine();
+                    diretor = Console.ReadLine();
 
                     Console.WriteLine("Digite o ator principal do filme: ");
-                    string atorPrincipal = Console.ReadLine();
+                    atorPrincipal = Console.ReadLine();
 
-                    Console.WriteLine("Digite a duração do filme: ");
-                    int duracao = int.Parse(Console.ReadLine());
+                    duracao = ReadInt("Digite a duração do filme: ");
 
                     Console.WriteLine("Digite a classificação do filme: ");
-                    string classificacao = Console.ReadLine();
+                    classificacao = Console.ReadLine();
 
                     Console.WriteLine("Digite a categoria do filme: ");
-                    string categoria = Console.ReadLine();
+                    categoria = Console.ReadLine();
+                    Console.Clear();
 
                     _cineManager.CadastrarFilme(titulo, diretor, atorPrincipal, duracao, classificacao, categoria);
                     break;
 
                 case 2:
                     Console.WriteLine("Opção 2 selecionada: Consultar filme");
+                    Console.Clear();
                     _cineManager.ConsultarFilmes();
                     break;
 
                 case 3:
                     Console.WriteLine("Opção 3 selecionada: Atualizar filme");
-                    // Lógica para atualizar um filme
+                    _cineManager.ConsultarFilmes();
+                    idFilme = ReadInt("Digite o código do filme que atualizar: ");
+
+                    Console.WriteLine("Digite o novo título do filme: ");
+                    titulo = Console.ReadLine();
+
+                    Console.WriteLine("Digite o novo diretor do filme: ");
+                    diretor = Console.ReadLine();
+
+                    Console.WriteLine("Digite o novo ator principal do filme: ");
+                    atorPrincipal = Console.ReadLine();
+
+                    duracao = ReadInt("Digite a nova duração do filme: ");
+
+                    Console.WriteLine("Digite a nova classificação do filme: ");
+                    classificacao = Console.ReadLine();
+
+                    Console.WriteLine("Digite a nova categoria do filme: ");
+                    categoria = Console.ReadLine();
+                    Console.Clear();
+
+                    _cineManager.AtualizarFilme(idFilme, titulo, diretor, atorPrincipal, duracao, classificacao, categoria);
+
                     break;
 
                 case 4:
                     Console.WriteLine("Opção 4 selecionada: Excluir filme");
-                    // Lógica para excluir um filme
+                    _cineManager.ConsultarFilmes();
+                    idFilme = ReadInt("Digite o código do filme que deseja excluir: ");
+                    Console.Clear();
+                    _cineManager.ExcluirFilme(idFilme);
                     break;
 
                 default:
@@ -150,6 +204,14 @@ namespace Cine_Net.Services.Facades
 
         public void ReadOptionSessao(int option)
         {
+            int idCinema;
+            int idSala;
+            int idFilme;
+            int idSessao;
+            bool dataHoraValida;
+            string input;
+
+
             Console.Clear();
 
             switch (option)
@@ -158,36 +220,24 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 1 selecionada: Cadastrar sessão");
                     _cineManager.ConsultarCinemas();
 
-                    Console.WriteLine("Digite o número do cinema que deseja a sessão");
-                    int idCinema;
-
-                    while (true)
-                    {
-                        if (int.TryParse(Console.ReadLine(), out idCinema))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Opção inválida, informe novamente!");
-                        }
-                    }
+                    idCinema = ReadInt("Digite o número do cinema que deseja a sessão: ");
 
                     _cineManager.ConsultarSalas(idCinema);
 
-                    Console.WriteLine("Digite o código da sala em que você quer cadastrar a sessão");
-                    int idSala = int.Parse(Console.ReadLine());
+
+                    idSala = ReadInt("Digite o código da sala em que você quer cadastrar a sessão: ");
+                    // Verificar se o código da sala que ele digitou realmente pertence ao cinema escolhido anteriormente
 
                     _cineManager.ConsultarFilmes();
-                    Console.WriteLine("Digite o código do filme que você quer exibir na sessão");
-                    int idFilme = int.Parse(Console.ReadLine());
 
-                    bool dataHoraValida = false;
+                    idFilme = ReadInt("Digite o código do filme que você quer exibir na sessão: ");
+
+                    dataHoraValida = false;
 
                     while (!dataHoraValida)
                     {
                         Console.WriteLine("Digite a data e hora da sessão (no formato dd/MM/yyyy HH:mm:ss):");
-                        string input = Console.ReadLine();
+                        input = Console.ReadLine();
 
                         if (DateTime.TryParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
                         {
@@ -199,6 +249,7 @@ namespace Cine_Net.Services.Facades
                             {
                                 dataHoraValida = true;
                                 Console.WriteLine("A data e hora inseridas são válidas.");
+                                Console.Clear();
                                 _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
                             }
 
@@ -218,32 +269,68 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 2 selecionada: Consultar sessão");
                     _cineManager.ConsultarCinemas();
 
-                    Console.WriteLine("Digite o número do cinema que deseja ver as sessões");
-                    int idCinemaConsultar;
-
-                    while (true)
-                    {
-                        if (int.TryParse(Console.ReadLine(), out idCinemaConsultar))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Opção inválida, informe novamente!");
-                        }
-                    }
-
+                    int idCinemaConsultar = ReadInt("Digite o número do cinema que deseja ver as sessões: ");
                     _cineManager.ConsultarSessoes(idCinemaConsultar);
                     break;
 
                 case 3:
                     Console.WriteLine("Opção 3 selecionada: Atualizar sessão");
-                    // Lógica para atualizar uma sessão
+
+                    _cineManager.ConsultarCinemas();
+                    idCinema = ReadInt("Digite o número do cinema que deseja a atualizar sessão: ");
+
+                    _cineManager.ConsultarSessoes(idCinema);
+                    idSessao = ReadInt("Digite o código da sessão que você deseja atualizar: ");
+
+                    _cineManager.ConsultarSalas(idCinema);
+                    idSala = ReadInt("Digite o código da sala em que a sessão ficará a partir de agora: ");
+                    // Verificar se o código da sala que ele digitou realmente pertence ao cinema escolhido anteriormente
+
+                    _cineManager.ConsultarFilmes();
+                    idFilme = ReadInt("Digite o código do filme que você quer exibir na sessão a partir de agora: ");
+
+                    dataHoraValida = false;
+
+                    while (!dataHoraValida)
+                    {
+                        Console.WriteLine("Digite a nova data e hora da sessão (no formato dd/MM/yyyy HH:mm:ss):");
+                        input = Console.ReadLine();
+
+                        if (DateTime.TryParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
+                        {
+
+                            Console.WriteLine($"Data e Hora: {dateTime}");
+
+                            DateTime dataAtual = DateTime.Now;
+                            if (dateTime > dataAtual)
+                            {
+                                dataHoraValida = true;
+                                Console.WriteLine("A data e hora inseridas são válidas.");
+                                Console.Clear();
+                                _cineManager.AtualizarSessao(idSessao, idFilme, idSala, dateTime);
+                            }
+
+                            else
+                            {
+                                Console.WriteLine("Data e hora inseridas são inválidas. Tente novamente.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Data e hora inseridas são inválidas. Tente novamente.");
+                        }
+                    }
                     break;
 
                 case 4:
                     Console.WriteLine("Opção 4 selecionada: Excluir sessão");
-                    // Lógica para excluir uma sessão
+                    _cineManager.ConsultarCinemas();
+                    idCinema = ReadInt("Digite o número do cinema que deseja a excluir uma sessão: ");
+
+                    _cineManager.ConsultarSessoes(idCinema);
+                    idSessao = ReadInt("Digite o código da sessão que você deseja excluir: ");
+                    Console.Clear();
+                    _cineManager.ExcluirSessao(idSessao);
                     break;
 
                 default:
@@ -254,6 +341,14 @@ namespace Cine_Net.Services.Facades
 
         public void ReadOptionSala(int option)
         {
+            int idCinema;
+            int idSala;
+            int numero;
+            int capacidade;
+            bool is3D;
+            string[] equipamentos;
+            List<string> listaEquipamentos;
+
             Console.Clear();
 
             switch (option)
@@ -262,24 +357,23 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 1 selecionada: Cadastrar sala");
 
                     _cineManager.ConsultarCinemas();
-                    Console.WriteLine("Digite o numero do cinema que deseja cadastrar a sala");
-                    int idCinema = int.Parse(Console.ReadLine());
 
-                    Console.WriteLine("Digite o número da sala: ");
-                    int numero = int.Parse(Console.ReadLine());
+                    idCinema = ReadInt("Digite o numero do cinema que deseja cadastrar a sala: ");
 
-                    Console.WriteLine("Digite a capacidade da sala: ");
-                    int capacidade = int.Parse(Console.ReadLine());
+                    numero = ReadInt("Digite o número da sala: ");
+
+                    capacidade = ReadInt("Digite a capacidade da sala: ");
 
                     Console.WriteLine("A sala é 3D? (S/N): ");
-                    bool is3D = Console.ReadLine().ToUpper() == "S";
+                    is3D = Console.ReadLine().ToUpper() == "S";
 
                     Console.WriteLine("Digite os equipamentos da sala (separados por vírgula): ");
 
-                    string[] equipamentos = Console.ReadLine().Split(',');
+                    equipamentos = Console.ReadLine().Split(',');
 
-                    var listaEquipamentos = new List<string>(equipamentos);
+                    listaEquipamentos = new List<string>(equipamentos);
 
+                    Console.Clear();
                     _cineManager.CadastrarSala(numero, capacidade, is3D, listaEquipamentos, idCinema);
                     break;
 
@@ -287,45 +381,58 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 2 selecionada: Consultar sala");
                     _cineManager.ConsultarCinemas();
 
-                    Console.WriteLine("Digite o numero do cinema que deseja consultar as salas");
-                    int idCinemaConsulta = int.Parse(Console.ReadLine());
+                    int idCinemaConsulta = ReadInt("Digite o numero do cinema que deseja consultar as salas: ");
 
                     _cineManager.ConsultarSalas(idCinemaConsulta);
                     break;
 
                 case 3:
                     Console.WriteLine("Opção 3 selecionada: Atualizar sala");
-                    // Lógica para atualizar uma sala
+                    _cineManager.ConsultarCinemas();
+
+                    idCinema = ReadInt("Digite o numero do cinema em que deseja atualizar uma sala: ");
+
+                    _cineManager.ConsultarSalas(idCinema);
+
+                    idSala = ReadInt("Digite o código da sala que deseja atualizar: ");
+
+                    numero = ReadInt("Digite o novo número da sala: ");
+
+                    capacidade = ReadInt("Digite a nova capacidade da sala: ");
+
+                    Console.WriteLine("A sala é 3D? (S/N): ");
+                    is3D = Console.ReadLine().ToUpper() == "S";
+
+                    Console.WriteLine("Digite os novos equipamentos da sala (separados por vírgula): ");
+
+                    equipamentos = Console.ReadLine().Split(',');
+
+                    listaEquipamentos = new List<string>(equipamentos);
+
+                    Console.Clear();
+                    _cineManager.AtualizarSala(idSala, numero, capacidade, is3D, listaEquipamentos);
+
                     break;
 
                 case 4:
                     Console.WriteLine("Opção 4 selecionada: Excluir sala");
-                    // Lógica para excluir uma sala
+                    _cineManager.ConsultarCinemas();
+
+                    idCinema = ReadInt("Digite o numero do cinema em que deseja excluir uma sala: ");
+
+                    _cineManager.ConsultarSalas(idCinema);
+
+                    idSala = ReadInt("Digite o código da sala que deseja excluir: ");
+
+                    Console.Clear();
+                    _cineManager.ExcluirSala(idSala, idCinema);
+
                     break;
 
                 default:
                     Console.WriteLine("Opção inválida");
                     break;
             }
-        }
-
-        private double ReadDouble()
-        {
-            double value;
-
-            while (true)
-            {
-                if (double.TryParse(Console.ReadLine().Replace(",", "."), out value))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Valor inválido, informe novamente!");
-                }
-            }
-
-            return value;
         }
 
         public void ReadVendaIngressoInfos()
@@ -375,20 +482,7 @@ namespace Cine_Net.Services.Facades
 
             while (true)
             {
-                Console.WriteLine("Digite o número da sessão desejada: ");
-                int idSessao;
-
-                while (true)
-                {
-                    if (int.TryParse(Console.ReadLine(), out idSessao))
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Opção inválida, informe novamente!");
-                    }
-                }
+                int idSessao = ReadInt("Digite o número de sessão desejada");
 
                 sessao = _unitOfWork.SessaoRepository.GetById(idSessao);
 
@@ -416,20 +510,7 @@ namespace Cine_Net.Services.Facades
         {
             _vendasManager.ListarIngressos();
 
-            Console.WriteLine("Digite o número do ingresso que deseja cancelar: ");
-
-            int ingresso_id;
-            while (true)
-            {
-                if (int.TryParse(Console.ReadLine(), out ingresso_id))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Opção inválida, informe novamente!");
-                }
-            }
+            int ingresso_id = ReadInt("Digite o número do ingresso que deseja cancelar");
 
             _vendasManager.CancelarIngresso(ingresso_id);
         }
@@ -484,6 +565,40 @@ namespace Cine_Net.Services.Facades
             }
 
             _cineManager.VerificarSessaoDisponivel(dataSessao);
+        }
+
+
+        public int ReadInt(String msgForm)
+        {
+            while (true)
+            {
+                Console.Write(msgForm);
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int result))
+                {
+                    return result;
+                }
+
+                Console.WriteLine("Valor inválido. Tente novamente.");
+            }
+        }
+
+
+        public double ReadDouble(String msgForm)
+        {
+            while (true)
+            {
+                Console.Write(msgForm);
+                string input = Console.ReadLine();
+
+                if (double.TryParse(input, out double result))
+                {
+                    return result;
+                }
+
+                Console.WriteLine("Valor inválido. Tente novamente.");
+            }
         }
     }
 }

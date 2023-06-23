@@ -37,6 +37,55 @@ namespace Cine_Net.Services.Facades
             ListarCinemas(cinemasEnumerable);
         }
 
+        public void AtualizarCinema(int idCinema, String nome, string endereco, double precoWeek, double precoWeekend)
+        {
+            var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
+
+            if (cinema is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {idCinema} não foi encontrado");
+                return;
+            }
+
+            cinema.Nome = nome;
+            cinema.Endereco = endereco;
+            cinema.PrecoWeek = precoWeek;
+            cinema.PrecoWeekend = precoWeekend;
+
+            _unitOfWork.CinemaRepository.Update(cinema);
+
+
+            var salasCinema = cinema.Salas;
+            foreach (var sala in salasCinema)
+            {
+                AtualizarPrecoSessoes(sala.Sessao);
+            }
+
+
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Cinema atualizado com sucesso!");
+            Console.WriteLine("========================================================\n");
+        }
+
+        public void ExcluirCinema(int idCinema)
+        {
+            var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
+
+            if (cinema is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {idCinema} não foi encontrado");
+                return;
+            }
+
+            _unitOfWork.CinemaRepository.Delete(cinema);
+
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Cinema excluido com sucesso!");
+            Console.WriteLine("========================================================\n");
+        }
+
         public static bool ListarCinemas(IEnumerable<Cinema> cinemasEnumerable)
         {
             if (cinemasEnumerable is null || !cinemasEnumerable.Any())
@@ -136,6 +185,65 @@ namespace Cine_Net.Services.Facades
             return true;
         }
 
+        public void AtualizarSala(int idSala, int numero, int capacidade, bool is3D, List<string> listaEquipamentos)
+        {
+            var sala = _unitOfWork.SalaRepository.GetById(idSala);
+
+            if (sala is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {sala} não foi encontrado");
+                return;
+            }
+
+            sala.Numero = numero;
+            sala.Capacidade = capacidade;
+            sala.Is3D = is3D;
+            sala.Equipamentos = listaEquipamentos;
+
+            AtualizarPrecoSessoes(sala.Sessao);
+            _unitOfWork.SalaRepository.Update(sala);
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Sala atualizada com sucesso!");
+            Console.WriteLine("========================================================\n");
+        }
+
+        public void AtualizarPrecoSessoes(Collection<Sessao> sessoes)
+        {
+            foreach (Sessao sessao in sessoes)
+            {
+                sessao.PrecoIngresso = CalcPrecoIngresso(sessao.Sala, sessao.Horario);
+            }
+        }
+        public void ExcluirSala(int idSala, int idCinema)
+        {
+
+            var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
+
+            if (cinema is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {cinema} não foi encontrado");
+                return;
+            }
+
+            var sala = _unitOfWork.SalaRepository.GetById(idSala);
+
+            if (sala is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {sala} não foi encontrado");
+                return;
+            }
+
+            cinema.Salas.Remove(sala);
+            _unitOfWork.SalaRepository.Delete(sala);
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Sala excluída com sucesso!");
+            Console.WriteLine("========================================================\n");
+
+        }
+
         public void CadastrarFilme(string titulo, string diretor, string atorPrincipal, int duracao, string classificacao, string categoria)
         {
             var filme = new Filme
@@ -189,6 +297,82 @@ namespace Cine_Net.Services.Facades
             return true;
         }
 
+        public void AtualizarFilme(int idFilme, String titulo, string diretor, string atorPrincipal, int duracao, string classificacao, string categoria)
+        {
+            var filme = _unitOfWork.FilmeRepository.GetById(idFilme);
+
+            if (filme is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {idFilme} não foi encontrado");
+                return;
+            }
+
+            filme.Titulo = titulo;
+            filme.Diretor = diretor;
+            filme.AtorPrincipal = atorPrincipal;
+            filme.Duracao = duracao;
+            filme.Classificacao = classificacao;
+            filme.Categoria = categoria;
+
+            _unitOfWork.FilmeRepository.Update(filme);
+
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Filme atualizado com sucesso!");
+            Console.WriteLine("========================================================\n");
+
+        }
+
+        public void ExcluirFilme(int idFilme)
+        {
+            var filme = _unitOfWork.FilmeRepository.GetById(idFilme);
+
+            if (filme is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {idFilme} não foi encontrado");
+                return;
+            }
+
+
+            cleanSessions(filme);
+            _unitOfWork.FilmeRepository.Delete(filme);
+
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Filme excluido com sucesso!");
+            Console.WriteLine("========================================================\n");
+        }
+
+        public void cleanSessions(Filme filme)
+        {
+
+            var cinemas = _unitOfWork.CinemaRepository.GetList();
+
+            foreach (var cinema in cinemas)
+            {
+                var salas = cinema.Salas;
+
+                foreach (var sala in salas)
+                {
+                    var sessoes = sala.Sessao;
+
+                    if (sessoes is null || !sessoes.Any())
+                    {
+                        continue;
+                    }
+
+                    foreach (var sessao in sessoes)
+                    {
+                        if (sessao.Filme == filme)
+                        {
+                            sessao.Filme = null;
+                        }
+                    }
+                }
+
+            }
+        }
+
         public void CadastrarSessao(int idFilme, int idSala, DateTime horario)
         {
             var filme = _unitOfWork.FilmeRepository.GetById(idFilme);
@@ -222,6 +406,10 @@ namespace Cine_Net.Services.Facades
 
             _unitOfWork.SalaRepository.Update(sala);
             _unitOfWork.SessaoRepository.Add(sessao);
+
+            Console.WriteLine("========================================================");
+            Console.WriteLine("A sessao foi cadastrada com sucesso!");
+            Console.WriteLine("========================================================\n");
         }
 
         public void ConsultarSessoes(int idCinema)
@@ -236,44 +424,135 @@ namespace Cine_Net.Services.Facades
             }
 
             var salas = cinema.Salas;
-            ListarSessoes(salas, cinema);
+            ListarSessoes(salas);
         }
 
-        public static bool ListarSessoes(Collection<Sala> salas, Cinema cinema)
+        public static bool ListarSessoes(Collection<Sala> salas)
         {
+            // Verificar se a coleção de salas também está vazia
+            if (salas == null || !salas.Any())
+            {
+                Console.WriteLine("========================================================");
+                Console.WriteLine("Não existem salas disponíveis");
+                Console.WriteLine("========================================================\n");
+                return false;
+            }
+
             foreach (var sala in salas)
             {
                 var sessoes = sala.Sessao;
 
-                if (sessoes is null || !sessoes.Any())
+                if (sessoes == null || !sessoes.Any())
                 {
                     Console.WriteLine("========================================================");
-                    Console.WriteLine("Não existem sessoes disponíveis.");
+                    Console.WriteLine("Não existem sessões disponíveis na sala " + sala.Numero);
                     Console.WriteLine("========================================================\n");
-
-                    return default;
                 }
-
-                foreach (var sessao in sessoes)
+                else
                 {
-                    Console.WriteLine("========================================================");
-                    Console.WriteLine("Código: " + sessao.Id);
-                    Console.WriteLine("Numero da sala: " + sessao.Sala.Numero);
-                    Console.WriteLine("Titulo: " + sessao.Filme.Titulo);
-                    Console.WriteLine("Horario: " + sessao.Horario);
-                    Console.WriteLine("Lugares: " + sessao.Lugares);
-
-                    if (sessao.Sala.Is3D)
+                    foreach (var sessao in sessoes)
                     {
-                        Console.WriteLine("Sessao 3D");
-                    }
+                        // Verificar se existe um filme cadastrado na sessão
+                        if (sessao.Filme == null)
+                        {
+                            Console.WriteLine("========================================================");
 
-                    Console.WriteLine("Preco Inteira: " + sessao.PrecoIngresso);
-                    Console.WriteLine("========================================================\n");
+                            Console.WriteLine("Sessão de Código" + sessao.Id + " não possui um filme associado");
+                            Console.WriteLine("Horário: " + sessao.Horario);
+                            Console.WriteLine("Lugares: " + sessao.Lugares);
+                            Console.WriteLine("========================================================\n");
+                        }
+                        else
+                        {
+                            Console.WriteLine("========================================================");
+                            Console.WriteLine("Numero da sala: " + sessao.Sala.Numero);
+                            Console.WriteLine("Código: " + sessao.Id);
+                            Console.WriteLine("Título: " + sessao.Filme.Titulo);
+                            Console.WriteLine("Horário: " + sessao.Horario);
+                            Console.WriteLine("Lugares: " + sessao.Lugares);
+
+                            if (sessao.Sala.Is3D)
+                            {
+                                Console.WriteLine("Sessão 3D");
+                            }
+
+                            Console.WriteLine("Preço Inteira: " + sessao.PrecoIngresso);
+                            Console.WriteLine("========================================================\n");
+                        }
+                    }
                 }
             }
 
             return true;
+        }
+
+
+        public void AtualizarSessao(int idSessao, int idFilme, int idSala, DateTime horario)
+        {
+            var sessao = _unitOfWork.SessaoRepository.GetById(idSessao);
+
+            if (sessao is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {idSessao} não foi encontrado");
+                return;
+            }
+
+            var sala = _unitOfWork.SalaRepository.GetById(idSala);
+
+            if (sala is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {sala} não foi encontrado");
+                return;
+            }
+
+            var filme = _unitOfWork.FilmeRepository.GetById(idFilme);
+
+            if (filme is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {filme} não foi encontrado");
+                return;
+            }
+
+            //Remove sessão da sala antiga
+            sessao.Sala.Sessao.Remove(sessao);
+
+
+            sessao.Filme = filme;
+            sessao.Sala = sala;
+            sessao.PrecoIngresso = CalcPrecoIngresso(sala, horario);
+            sessao.Horario = horario;
+
+            // Adiciona sessão na sala nova
+            sessao.Sala.Sessao.Add(sessao);
+
+            _unitOfWork.SessaoRepository.Update(sessao);
+
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Sessão Atualizada com sucesso!");
+            Console.WriteLine("========================================================\n");
+        }
+
+        public void ExcluirSessao(int idSessao)
+        {
+
+            var sessao = _unitOfWork.SessaoRepository.GetById(idSessao);
+
+            if (sessao is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {idSessao} não foi encontrado");
+                return;
+            }
+
+            sessao.Sala.Sessao.Remove(sessao);
+            _unitOfWork.SessaoRepository.Delete(sessao);
+
+            Console.WriteLine("========================================================");
+            Console.WriteLine("Sessão Excluída com sucesso!");
+            Console.WriteLine("========================================================\n");
         }
 
         public static bool IsWeekend(DateTime data)
@@ -338,20 +617,20 @@ namespace Cine_Net.Services.Facades
             CadastrarFilme("A Origem", "Christopher Nolan", "Leonardo DiCaprio", 148, "+14", "Ficção Científica"); // Id 8
 
             // Add Sessões
-            CadastrarSessao(3, 1, new DateTime(2023, 6, 24, 10, 0, 0));
-            CadastrarSessao(2, 2, new DateTime(2023, 6, 25, 14, 30, 0));
-            CadastrarSessao(3, 1, new DateTime(2023, 6, 26, 19, 15, 0));
-            CadastrarSessao(4, 4, new DateTime(2023, 6, 27, 11, 45, 0));
-            CadastrarSessao(5, 5, new DateTime(2023, 6, 28, 16, 20, 0));
+            CadastrarSessao(3, 1, new DateTime(2023, 7, 24, 10, 0, 0));
+            CadastrarSessao(2, 2, new DateTime(2023, 7, 25, 14, 30, 0));
+            CadastrarSessao(3, 1, new DateTime(2023, 7, 26, 19, 15, 0));
+            CadastrarSessao(4, 4, new DateTime(2023, 7, 27, 11, 45, 0));
+            CadastrarSessao(5, 5, new DateTime(2023, 7, 28, 16, 20, 0));
             CadastrarSessao(0, 1, new DateTime(2023, 7, 3, 13, 15, 0));
             CadastrarSessao(1, 2, new DateTime(2023, 7, 4, 17, 0, 0));
             CadastrarSessao(2, 3, new DateTime(2023, 7, 5, 21, 30, 0));
             CadastrarSessao(2, 4, new DateTime(2023, 7, 6, 10, 45, 0));
-            CadastrarSessao(4, 0, new DateTime(2023, 7, 7, 14, 20, 0));
-            CadastrarSessao(5, 3, new DateTime(2023, 7, 8, 18, 45, 0));
-            CadastrarSessao(7, 4, new DateTime(2023, 7, 10, 16, 15, 0));
-            CadastrarSessao(6, 1, new DateTime(2023, 7, 12, 13, 45, 0));
-            CadastrarSessao(2, 2, new DateTime(2023, 7, 13, 17, 30, 0));
+            CadastrarSessao(4, 0, new DateTime(2023, 8, 7, 14, 20, 0));
+            CadastrarSessao(5, 3, new DateTime(2023, 8, 8, 18, 45, 0));
+            CadastrarSessao(7, 4, new DateTime(2023, 8, 10, 16, 15, 0));
+            CadastrarSessao(6, 1, new DateTime(2023, 8, 12, 13, 45, 0));
+            CadastrarSessao(2, 2, new DateTime(2023, 8, 13, 17, 30, 0));
         }
 
         public void ConsultarFilmeDia(DateTime data)
