@@ -1,5 +1,4 @@
 ﻿using Cine_Net.Infra.Interfaces;
-using System.Reflection;
 
 namespace Cine_Net.Infra.Repositories
 {

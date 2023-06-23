@@ -271,10 +271,10 @@ namespace Cine_Net.Services.Facades
 
                     if (!_cineManager.ConsultarSessoes(idCinema))
                     {
-                        return false;
+                        break;
                     }
 
-                    _cineManager.ConsultarSessoes(idCinema);
+                    //_cineManager.ConsultarSessoes(idCinema);
                     return true;
 
                 case 3:
@@ -290,7 +290,10 @@ namespace Cine_Net.Services.Facades
                     // AQUI!
                     idSessao = ReadInt("Digite o código da sessão que você deseja atualizar: ");
 
-                    _cineManager.ConsultarSalas(idCinema);
+                    if (!_cineManager.ConsultarSalas(idCinema))
+                    {
+                        break;
+                    }
 
                     idSala = ReadInt("Digite o código da sala em que a sessão ficará a partir de agora: ");
 
@@ -338,7 +341,6 @@ namespace Cine_Net.Services.Facades
                         break;
                     }
                     idSessao = ReadInt("Digite o código da sessão que você deseja excluir: ");
-
 
                     Console.Clear();
                     _cineManager.ExcluirSessao(idSessao, idCinema);
@@ -402,7 +404,6 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 3 selecionada: Atualizar sala");
                     _cineManager.ConsultarCinemas();
 
-
                     idCinema = ReadInt("Digite o numero do cinema em que deseja atualizar uma sala: ");
 
                     if (!_cineManager.ConsultarSalas(idCinema))
@@ -433,7 +434,6 @@ namespace Cine_Net.Services.Facades
                 case 4:
                     Console.WriteLine("Opção 4 selecionada: Excluir sala");
                     _cineManager.ConsultarCinemas();
-
 
                     idCinema = ReadInt("Digite o numero do cinema em que deseja excluir uma sala: ");
 
@@ -499,7 +499,6 @@ namespace Cine_Net.Services.Facades
                 IsEstudante = (bool)isEstudante,
             };
 
-
             _cineManager.ConsultarCinemas();
 
             int idCinema = ReadInt("Digite o número do cinema que deseja ver as sessões: ");
@@ -521,18 +520,14 @@ namespace Cine_Net.Services.Facades
             {
                 Console.WriteLine("Sessão Não encontrada");
                 return false;
-            }
-
-            if (sessao.Lugares.Equals(0))
-            {
-                Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
-            }
+            }                   
 
             if (sessao.Filme == null)
             {
                 Console.WriteLine("A sessão selecionada está indisponível. Por favor escolha outra!");
+                return false;
             }
-            
+
             if (sessao.Lugares.Equals(0))
             {
                 Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
