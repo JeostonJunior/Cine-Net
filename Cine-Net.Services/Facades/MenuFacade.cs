@@ -222,11 +222,13 @@ namespace Cine_Net.Services.Facades
 
                     idCinema = ReadInt("Digite o número do cinema que deseja a sessão: ");
 
-                    _cineManager.ConsultarSalas(idCinema);
+                    if (!_cineManager.ConsultarSalas(idCinema))
+                    {
+                        break;
+                    }
 
 
                     idSala = ReadInt("Digite o código da sala em que você quer cadastrar a sessão: ");
-                    // Verificar se o código da sala que ele digitou realmente pertence ao cinema escolhido anteriormente
 
                     _cineManager.ConsultarFilmes();
 
@@ -250,7 +252,7 @@ namespace Cine_Net.Services.Facades
                                 dataHoraValida = true;
                                 Console.WriteLine("A data e hora inseridas são válidas.");
                                 Console.Clear();
-                                _cineManager.CadastrarSessao(idFilme, idSala, dateTime);
+                                _cineManager.CadastrarSessao(idFilme, idSala, dateTime, idCinema);
                             }
 
                             else
@@ -279,12 +281,16 @@ namespace Cine_Net.Services.Facades
                     _cineManager.ConsultarCinemas();
                     idCinema = ReadInt("Digite o número do cinema que deseja a atualizar sessão: ");
 
-                    _cineManager.ConsultarSessoes(idCinema);
+                    if (!_cineManager.ConsultarSessoes(idCinema))
+                    {
+                        break;
+                    }
+                    // AQUI!
                     idSessao = ReadInt("Digite o código da sessão que você deseja atualizar: ");
 
                     _cineManager.ConsultarSalas(idCinema);
+
                     idSala = ReadInt("Digite o código da sala em que a sessão ficará a partir de agora: ");
-                    // Verificar se o código da sala que ele digitou realmente pertence ao cinema escolhido anteriormente
 
                     _cineManager.ConsultarFilmes();
                     idFilme = ReadInt("Digite o código do filme que você quer exibir na sessão a partir de agora: ");
@@ -307,7 +313,7 @@ namespace Cine_Net.Services.Facades
                                 dataHoraValida = true;
                                 Console.WriteLine("A data e hora inseridas são válidas.");
                                 Console.Clear();
-                                _cineManager.AtualizarSessao(idSessao, idFilme, idSala, dateTime);
+                                _cineManager.AtualizarSessao(idSessao, idFilme, idSala, dateTime, idCinema);
                             }
 
                             else
@@ -327,10 +333,15 @@ namespace Cine_Net.Services.Facades
                     _cineManager.ConsultarCinemas();
                     idCinema = ReadInt("Digite o número do cinema que deseja a excluir uma sessão: ");
 
-                    _cineManager.ConsultarSessoes(idCinema);
+                    if (!_cineManager.ConsultarSessoes(idCinema))
+                    {
+                        break;
+                    }
                     idSessao = ReadInt("Digite o código da sessão que você deseja excluir: ");
+
+
                     Console.Clear();
-                    _cineManager.ExcluirSessao(idSessao);
+                    _cineManager.ExcluirSessao(idSessao, idCinema);
                     break;
 
                 default:
@@ -390,9 +401,13 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 3 selecionada: Atualizar sala");
                     _cineManager.ConsultarCinemas();
 
+
                     idCinema = ReadInt("Digite o numero do cinema em que deseja atualizar uma sala: ");
 
-                    _cineManager.ConsultarSalas(idCinema);
+                    if (!_cineManager.ConsultarSalas(idCinema))
+                    {
+                        break;
+                    }
 
                     idSala = ReadInt("Digite o código da sala que deseja atualizar: ");
 
@@ -410,7 +425,7 @@ namespace Cine_Net.Services.Facades
                     listaEquipamentos = new List<string>(equipamentos);
 
                     Console.Clear();
-                    _cineManager.AtualizarSala(idSala, numero, capacidade, is3D, listaEquipamentos);
+                    _cineManager.AtualizarSala(idSala, numero, capacidade, is3D, listaEquipamentos, idCinema);
 
                     break;
 
@@ -418,9 +433,13 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 4 selecionada: Excluir sala");
                     _cineManager.ConsultarCinemas();
 
+
                     idCinema = ReadInt("Digite o numero do cinema em que deseja excluir uma sala: ");
 
-                    _cineManager.ConsultarSalas(idCinema);
+                    if (!_cineManager.ConsultarSalas(idCinema))
+                    {
+                        break;
+                    }
 
                     idSala = ReadInt("Digite o código da sala que deseja excluir: ");
 
@@ -490,6 +509,12 @@ namespace Cine_Net.Services.Facades
                 {
                     Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
                 }
+
+                if (sessao.Filme == null)
+                {
+                    Console.WriteLine("A sessão selecionada está indisponível. Por favor escolha outra!");
+                }
+
                 else
                 {
                     break;
@@ -528,7 +553,7 @@ namespace Cine_Net.Services.Facades
                 if (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime data))
                 {
                     dataFilme = data;
-                    Console.WriteLine($"Data: {dataFilme.Date}");
+                    //Console.WriteLine($"Data: {dataFilme.Date}");
                     break;
                 }
                 else
@@ -554,7 +579,7 @@ namespace Cine_Net.Services.Facades
                 if (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime data))
                 {
                     dataSessao = data;
-                    Console.WriteLine($"Data: {dataSessao.Date}");
+                    //Console.WriteLine($"Data: {dataSessao.Date}");
                     break;
                 }
                 else
