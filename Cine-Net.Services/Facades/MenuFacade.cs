@@ -531,11 +531,11 @@ namespace Cine_Net.Services.Facades
             {
                 Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
                 return false;
-=========
-                if (sessao.Lugares.Equals(0))
-                {
-                    Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
-                }
+            }
+            if (sessao.Lugares.Equals(0))
+            {
+                Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
+            }
 
             if (sessao.Filme == null)
             {
