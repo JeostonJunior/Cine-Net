@@ -42,6 +42,7 @@ namespace Cine_Net.Services.Facades
 
                 if (resp.ToLower().Equals("s"))
                 {
+                    Console.Clear();
                     ImprimirTicket(ingresso);
                     break;
                 }
@@ -88,7 +89,7 @@ namespace Cine_Net.Services.Facades
         }
 
         private static void ImprimirTicket(Ingresso ingresso)
-        {
+        {           
             Console.WriteLine("========================================================");
             Console.WriteLine($"Código: {ingresso.Id}");
             Console.WriteLine($"Valor: R$ {ingresso.Valor.ToString().Replace(".", ",")}");
@@ -97,12 +98,12 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine($"CPF: {ingresso.Cliente.Cpf}");
             Console.WriteLine("=======================Sessão===========================");
             Console.WriteLine($"Sala: {ingresso.Sessao.Sala.Numero}");
-            Console.WriteLine($"Horário: {ingresso.Sessao.Horario.ToString("dd/MM/yyyy HH:mm")}");
+            Console.WriteLine($"Horário: {ingresso.Sessao.Horario:dd/MM/yyyy HH:mm}");
             Console.WriteLine($"Filme: {ingresso.Sessao.Filme.Titulo}");
-            Console.WriteLine($"========================================================\n");
+            Console.WriteLine($"========================================================\n");            
         }
 
-        public void ListarIngressos()
+        public bool ListarIngressos()
         {
             var ingressos = _unitOfWork.IngressoRepository.GetList();
 
@@ -112,7 +113,7 @@ namespace Cine_Net.Services.Facades
                 Console.WriteLine("Não existem ingressos registrados.");
                 Console.WriteLine("================================\n");
 
-                return;
+                return false;
             }
 
             foreach (var ingresso in ingressos)
@@ -125,10 +126,11 @@ namespace Cine_Net.Services.Facades
                 Console.WriteLine($"CPF: {ingresso.Cliente.Cpf}");
                 Console.WriteLine("=======================Sessão===========================");
                 Console.WriteLine($"Sala: {ingresso.Sessao.Sala.Numero}");
-                Console.WriteLine($"Horário: {ingresso.Sessao.Horario.ToString("dd/MM/yyyy HH:mm")}");
+                Console.WriteLine($"Horário: {ingresso.Sessao.Horario:dd/MM/yyyy HH:mm}");
                 Console.WriteLine($"Filme: {ingresso.Sessao.Filme.Titulo}");
                 Console.WriteLine($"========================================================\n");
             }
+            return true;
         }
     }
 }
