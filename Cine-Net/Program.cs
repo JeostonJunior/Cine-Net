@@ -39,25 +39,25 @@ internal class Program
             {
                 case 1:
                     MenuFacade.MenuCRUD("Cinema");
-                    optionMenu = menu.ReadInt("Escolha uma opção: ");
+                    optionMenu = MenuFacade.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionCinema(optionMenu);
                     break;
 
                 case 2:
                     MenuFacade.MenuCRUD("Salas");
-                    optionMenu = menu.ReadInt("Escolha uma opção: ");
+                    optionMenu = MenuFacade.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionSala(optionMenu);
                     break;
 
                 case 3:
                     MenuFacade.MenuCRUD("Filmes");
-                    optionMenu = menu.ReadInt("Escolha uma opção: ");
+                    optionMenu = MenuFacade.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionFilme(optionMenu);
                     break;
 
                 case 4:
                     MenuFacade.MenuCRUD("Sessões");
-                    optionMenu = menu.ReadInt("Escolha uma opção: ");
+                    optionMenu = MenuFacade.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionSessao(optionMenu);
                     break;
 
