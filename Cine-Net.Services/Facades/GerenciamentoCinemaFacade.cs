@@ -55,13 +55,11 @@ namespace Cine_Net.Services.Facades
 
             _unitOfWork.CinemaRepository.Update(cinema);
 
-
             var salasCinema = cinema.Salas;
             foreach (var sala in salasCinema)
             {
                 AtualizarPrecoSessoes(sala.Sessao);
             }
-
 
             Console.WriteLine("========================================================");
             Console.WriteLine("Cinema atualizado com sucesso!");
@@ -154,8 +152,7 @@ namespace Cine_Net.Services.Facades
 
             var salas = cinema.Salas;
 
-            ListarSalas(salas, cinema);
-            return true;
+            return ListarSalas(salas, cinema);
         }
 
         public static bool ListarSalas(Collection<Sala> salas, Cinema cinema)
@@ -227,16 +224,16 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine("========================================================\n");
         }
 
-        public void AtualizarPrecoSessoes(Collection<Sessao> sessoes)
+        public static void AtualizarPrecoSessoes(Collection<Sessao> sessoes)
         {
             foreach (Sessao sessao in sessoes)
             {
                 sessao.PrecoIngresso = CalcPrecoIngresso(sessao.Sala, sessao.Horario);
             }
         }
+
         public void ExcluirSala(int idSala, int idCinema)
         {
-
             var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
 
             if (cinema is null)
@@ -271,7 +268,6 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine("========================================================");
             Console.WriteLine("Sala excluída com sucesso!");
             Console.WriteLine("========================================================\n");
-
         }
 
         public void CadastrarFilme(string titulo, string diretor, string atorPrincipal, int duracao, string classificacao, string categoria)
@@ -350,7 +346,6 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine("========================================================");
             Console.WriteLine("Filme atualizado com sucesso!");
             Console.WriteLine("========================================================\n");
-
         }
 
         public void ExcluirFilme(int idFilme)
@@ -364,8 +359,7 @@ namespace Cine_Net.Services.Facades
                 return;
             }
 
-
-            cleanSessions(filme);
+            CleanSessions(filme);
             _unitOfWork.FilmeRepository.Delete(filme);
 
             Console.WriteLine("========================================================");
@@ -373,9 +367,8 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine("========================================================\n");
         }
 
-        public void cleanSessions(Filme filme)
+        public void CleanSessions(Filme filme)
         {
-
             var cinemas = _unitOfWork.CinemaRepository.GetList();
 
             foreach (var cinema in cinemas)
@@ -399,7 +392,6 @@ namespace Cine_Net.Services.Facades
                         }
                     }
                 }
-
             }
         }
 
@@ -466,6 +458,44 @@ namespace Cine_Net.Services.Facades
             var salas = cinema.Salas;
             ListarSessoes(salas);
             return true;
+        }
+
+        public Sessao VerificaSessao(int idCinema, int idSessao)
+        {
+            var cinema = _unitOfWork.CinemaRepository.GetById(idCinema);
+
+            if (cinema is null)
+            {
+                Console.Clear();
+                Console.WriteLine($"O ID: {idCinema} não foi encontrado");
+                return null;
+            }
+
+            var salas = cinema.Salas;
+
+            foreach (var sala in salas)
+            {
+                var sessoes = sala.Sessao;
+
+                if (sessoes == null || !sessoes.Any())
+                {
+                    Console.WriteLine("========================================================");
+                    Console.WriteLine("Não existem sessões disponíveis na sala " + sala.Numero);
+                    Console.WriteLine("========================================================\n");
+                }
+                else
+                {
+                    foreach (var sessao in sessoes)
+                    {
+                        if (sessao.Id == idSessao)
+                        {
+                            return sessao;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         public static bool ListarSessoes(Collection<Sala> salas)
@@ -587,7 +617,6 @@ namespace Cine_Net.Services.Facades
 
         public void ExcluirSessao(int idSessao, int idCinema)
         {
-
             var sessao = _unitOfWork.SessaoRepository.GetById(idSessao);
 
             if (sessao is null)
@@ -718,7 +747,6 @@ namespace Cine_Net.Services.Facades
 
         public void ConsultarFilmeDia(DateTime data)
         {
-
             var sessoes = _unitOfWork.SessaoRepository.GetList();
             var sessoesFiltradas = sessoes.Where((sessao) => IsSameDay(sessao.Horario, data));
 
@@ -748,7 +776,6 @@ namespace Cine_Net.Services.Facades
 
         public void VerificarSessaoDisponivel(DateTime data)
         {
-
             var sessoes = _unitOfWork.SessaoRepository.GetList();
             var sessoesFiltradas = sessoes.Where((sessao) => IsSameDay(sessao.Horario, data) && sessao.Lugares > 0);
 
