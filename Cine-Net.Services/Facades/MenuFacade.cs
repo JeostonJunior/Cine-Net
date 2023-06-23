@@ -543,13 +543,13 @@ namespace Cine_Net.Services.Facades
 
             while (true)
             {
-                Console.WriteLine("Informe o dia do filme (no formato dd/MM/yyyy):");
+                Console.Write("Informe o dia do filme (no formato dd/MM/yyyy): ");
                 string input = Console.ReadLine();
 
                 if (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime data))
                 {
                     dataFilme = data;
-                    Console.WriteLine($"Data: {dataFilme.Date}");
+                    Console.WriteLine($"Data: {dataFilme:dd/MM/yyyy}");
                     break;
                 }
                 else
@@ -567,13 +567,13 @@ namespace Cine_Net.Services.Facades
 
             while (true)
             {
-                Console.WriteLine("Informe o dia das sessões(no formato dd/MM/yyyy):");
+                Console.Write("Informe o dia das sessões(no formato dd/MM/yyyy): ");
                 string input = Console.ReadLine();
 
                 if (DateTime.TryParseExact(input, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime data))
                 {
                     dataSessao = data;
-                    Console.WriteLine($"Data: {dataSessao.Date}");
+                    Console.WriteLine($"Data: {dataSessao:dd/MM/yyyy}");
                     break;
                 }
                 else
