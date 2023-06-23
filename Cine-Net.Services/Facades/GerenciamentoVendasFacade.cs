@@ -85,7 +85,6 @@ namespace Cine_Net.Services.Facades
                 return;
             }
 
-
             ingresso.Sessao.Lugares += 1;
             _unitOfWork.SessaoRepository.Update(ingresso.Sessao);
 
