@@ -78,6 +78,14 @@ namespace Cine_Net.Services.Facades
         {
             var ingresso = _unitOfWork.IngressoRepository.GetById(ingresso_id);
 
+            if (ingresso is null) {
+                Console.WriteLine("========================================================");
+                Console.WriteLine("Ingresso Não Encontrado.");
+                Console.WriteLine("========================================================\n");
+                return;
+            }
+
+
             ingresso.Sessao.Lugares += 1;
             _unitOfWork.SessaoRepository.Update(ingresso.Sessao);
 
