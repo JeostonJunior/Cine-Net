@@ -16,7 +16,7 @@ internal class Program
         Console.WriteLine("Bem vindo a rede de Cinemas Cine-Net!");
         Console.WriteLine("======================================\n");
 
-        // Fax os pré cadastros
+        // Faz os pré cadastros de Cinemas,Salaa,Filmes e Sessões
         menu.MenuInit();
 
         Console.Clear();
@@ -39,37 +39,25 @@ internal class Program
             {
                 case 1:
                     MenuFacade.MenuCRUD("Cinema");
-
-                    Console.Write("Escolha uma opção: ");
-                    optionMenu = int.Parse(Console.ReadLine());
-
+                    optionMenu = menu.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionCinema(optionMenu);
                     break;
 
                 case 2:
                     MenuFacade.MenuCRUD("Salas");
-
-                    Console.Write("Escolha uma opção: ");
-                    optionMenu = int.Parse(Console.ReadLine());
-
+                    optionMenu = menu.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionSala(optionMenu);
                     break;
 
                 case 3:
                     MenuFacade.MenuCRUD("Filmes");
-
-                    Console.Write("Escolha uma opção: ");
-                    optionMenu = int.Parse(Console.ReadLine());
-
+                    optionMenu = menu.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionFilme(optionMenu);
                     break;
 
                 case 4:
                     MenuFacade.MenuCRUD("Sessões");
-
-                    Console.Write("Escolha uma opção: ");
-                    optionMenu = int.Parse(Console.ReadLine());
-
+                    optionMenu = menu.ReadInt("Escolha uma opção: ");
                     menu.ReadOptionSessao(optionMenu);
                     break;
 

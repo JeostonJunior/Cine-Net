@@ -71,7 +71,7 @@ namespace Cine_Net.Infra.Repositories
                 return (int)idProperty.GetValue(obj);
             }
             else
-            {                
+            {
                 throw new InvalidOperationException("O Objeto não possui uma propriedade ID valida");
             }
         }
