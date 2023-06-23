@@ -89,7 +89,7 @@ namespace Cine_Net.Services.Facades
         }
 
         private static void ImprimirTicket(Ingresso ingresso)
-        {           
+        {
             Console.WriteLine("========================================================");
             Console.WriteLine($"Código: {ingresso.Id}");
             Console.WriteLine($"Valor: R$ {ingresso.Valor.ToString().Replace(".", ",")}");
@@ -100,7 +100,7 @@ namespace Cine_Net.Services.Facades
             Console.WriteLine($"Sala: {ingresso.Sessao.Sala.Numero}");
             Console.WriteLine($"Horário: {ingresso.Sessao.Horario:dd/MM/yyyy HH:mm}");
             Console.WriteLine($"Filme: {ingresso.Sessao.Filme.Titulo}");
-            Console.WriteLine($"========================================================\n");            
+            Console.WriteLine($"========================================================\n");
         }
 
         public bool ListarIngressos()

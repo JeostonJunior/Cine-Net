@@ -68,12 +68,15 @@ internal class Program
                 case 6:
                     menu.ReadCancelIngressoInfos();
                     break;
+
                 case 7:
                     menu.ConsultaFilmeDia();
                     break;
+
                 case 8:
                     menu.VerificarSessaoDisponivel();
                     break;
+
                 default:
                     Console.Clear();
                     Console.WriteLine("Opção inválida");

@@ -342,7 +342,6 @@ namespace Cine_Net.Services.Facades
                     }
                     idSessao = ReadInt("Digite o código da sessão que você deseja excluir: ");
 
-
                     Console.Clear();
                     _cineManager.ExcluirSessao(idSessao, idCinema);
                     break;
@@ -405,7 +404,6 @@ namespace Cine_Net.Services.Facades
                     Console.WriteLine("Opção 3 selecionada: Atualizar sala");
                     _cineManager.ConsultarCinemas();
 
-
                     idCinema = ReadInt("Digite o numero do cinema em que deseja atualizar uma sala: ");
 
                     if (!_cineManager.ConsultarSalas(idCinema))
@@ -436,7 +434,6 @@ namespace Cine_Net.Services.Facades
                 case 4:
                     Console.WriteLine("Opção 4 selecionada: Excluir sala");
                     _cineManager.ConsultarCinemas();
-
 
                     idCinema = ReadInt("Digite o numero do cinema em que deseja excluir uma sala: ");
 
@@ -502,7 +499,6 @@ namespace Cine_Net.Services.Facades
                 IsEstudante = (bool)isEstudante,
             };
 
-
             _cineManager.ConsultarCinemas();
 
             int idCinema = ReadInt("Digite o número do cinema que deseja ver as sessões: ");
@@ -514,7 +510,6 @@ namespace Cine_Net.Services.Facades
 
             _cineManager.ConsultarSessoes(idCinema);
 
-
             int idSessao = ReadInt("Digite o número de sessão desejada: ");
 
             Console.Clear();
@@ -525,24 +520,13 @@ namespace Cine_Net.Services.Facades
             {
                 Console.WriteLine("Sessão Não encontrada");
                 return false;
-            }
-
-            if (sessao.Lugares.Equals(0))
-            {
-                Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
-                return false;
-            }
-            if (sessao.Lugares.Equals(0))
-            {
-                Console.WriteLine("A sessão selecionada está cheia, por favor escolha outra!");
-            }
+            }                   
 
             if (sessao.Filme == null)
             {
                 Console.WriteLine("A sessão selecionada está indisponível. Por favor escolha outra!");
                 return false;
             }
-
 
             if (sessao.Lugares.Equals(0))
             {
